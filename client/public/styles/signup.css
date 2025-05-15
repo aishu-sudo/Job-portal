@@ -5,7 +5,7 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #f8f9fa;
-    background: url('../../public/images/bird.webp');
+    background: url('/images/bird.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

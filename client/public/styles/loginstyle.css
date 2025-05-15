@@ -5,7 +5,7 @@ body {
     height: 100vh;
     background-color: #f5f5f5;
     font-family: Arial, sans-serif;
-    background: url('../../public/images/bird.webp');
+    background: url('/images/bird.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

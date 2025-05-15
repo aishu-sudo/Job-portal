@@ -1,5 +1,5 @@
-import * as hirefreelancer from './hirefreelancer.js';
-import * as findwork from './findwork.js';
+import * as hirefreelancer from './scripts/hirefreelancer.js';
+import * as findwork from './scripts/findwork.js';
 
 
 hirefreelancer.loadHireTab();
