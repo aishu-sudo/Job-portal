@@ -5,17 +5,17 @@ import * as findwork from './findwork.js';
 hirefreelancer.loadHireTab();
 findwork.setupWorkTabs();
 const mediaFiles = [
-    { type: "image", src: "../public/images/1.jpg" },
-    { type: "video", src: "../public/videos/2.mp4" },
-    { type: "image", src: "../public/images/3.jpg" },
-    { type: "image", src: "../public/images/4.jpg" },
-    { type: "image", src: "../public/images/5.jpg" },
-    { type: "video", src: "../public/videos/6.mp4" },
-    { type: "image", src: "../public/images/7.webp" },
-    { type: "image", src: "../public/images/8.jpeg" },
-    { type: "image", src: "../public/images/9.jpg" },
-    { type: "image", src: "../public/images/10.avif" },
-    { type: "image", src: "../public/images/11.jpg" }
+    { type: "image", src: "/images/1.jpg" },
+    { type: "video", src: "/videos/2.mp4" },
+    { type: "image", src: "/images/3.jpg" },
+    { type: "image", src: "/images/4.jpg" },
+    { type: "image", src: "/images/5.jpg" },
+    { type: "video", src: "/videos/6.mp4" },
+    { type: "image", src: "/images/7.webp" },
+    { type: "image", src: "/images/8.jpeg" },
+    { type: "image", src: "/images/9.jpg" },
+    { type: "image", src: "/images/10.avif" },
+    { type: "image", src: "/images/11.jpg" }
 ];
 
 let currentIndex = 0;
