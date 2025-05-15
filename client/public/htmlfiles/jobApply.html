@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apply for Job</title>
+    <style>
+        /* Your existing styles remain the same */
+    </style>
+</head>
+
+<body>
+    <div class="job-container">
+        <h2 id="jobTitle">Loading job details...</h2>
+        <div class="job-details" id="jobDetails">
+            <!-- Details will be loaded dynamically -->
+        </div>
+
+        <form id="applyForm">
+            <label for="proposal">Your Proposal:</label>
+            <textarea id="proposal" name="proposal" required placeholder="Describe why you're a good fit for this job..."></textarea>
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+
+    <script>
+        // Get job ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobId = urlParams.get('jobId');
+
+        // API base URL - adjust this to match your backend URL
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // DOM elements
+        const jobTitleEl = document.getElementById('jobTitle');
+        const jobDetailsEl = document.getElementById('jobDetails');
+        const applyForm = document.getElementById('applyForm');
+
+        // Fetch job details
+        async function loadJobDetails() {
+            if (!jobId) {
+                alert('No job ID provided.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch job details');
+                }
+
+                const job = await response.json();
+
+                // Update the page with job details
+                jobTitleEl.textContent = job.title || "Job Title";
+                jobDetailsEl.innerHTML = `
+                    <p><strong>Client:</strong> ${job.client?.name || "Anonymous"}</p>
+                    <p><strong>Description:</strong> ${job.description}</p>
+                    <p><strong>Skills Required:</strong> ${job.skillsRequired?.join(', ') || "Not specified"}</p>
+                    <p><strong>Budget:</strong> $${job.budget}</p>
+                `;
+            } catch (error) {
+                console.error('Error loading job details:', error);
+                jobTitleEl.textContent = "Error loading job";
+                jobDetailsEl.innerHTML = `<p>${error.message}</p>`;
+            }
+        }
+
+        // Handle form submission
+        applyForm.addEventListener('submit', async(e) => {
+            e.preventDefault();
+
+            const proposal = document.getElementById('proposal').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/jobs/${jobId}/apply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add authorization header if needed
+                        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        proposal: proposal
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit application');
+                }
+
+                const result = await response.json();
+                alert('Application submitted successfully!');
+                // Optionally redirect or update UI
+            } catch (error) {
+                console.error('Error submitting application:', error);
+                alert(`Error: ${error.message}`);
+            }
+        });
+
+        // Load job details when page loads
+        loadJobDetails();
+    </script>
+</body>
+
+</html>

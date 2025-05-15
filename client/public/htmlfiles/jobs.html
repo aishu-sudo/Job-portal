@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JobPortal - Find Freelance Jobs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Your existing styles remain the same -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Main Jobs View -->
+        <div id="jobs-view">
+            <div class="category-tabs">
+                <div class="category-tab active" data-tab="all">All Jobs</div>
+                <div class="category-tab" data-tab="skills">Skills</div>
+                <div class="category-tab" data-tab="languages">Languages</div>
+                <div class="category-tab" data-tab="topRated">Top Rated</div>
+            </div>
+
+            <div class="job-section active" id="all-section">
+                <h2 class="section-title">All Available Jobs</h2>
+                <div class="loading-spinner" id="all-loading">
+                    <div class="spinner"></div>
+                    <p>Loading jobs...</p>
+                </div>
+                <div class="jobs-grid" id="all-jobs"></div>
+            </div>
+
+            <div class="job-section" id="skills-section">
+                <h2 class="section-title">Jobs Matching Your Skills</h2>
+                <div class="loading-spinner" id="skills-loading">
+                    <div class="spinner"></div>
+                    <p>Loading jobs...</p>
+                </div>
+                <div class="jobs-grid" id="skills-jobs"></div>
+            </div>
+
+            <div class="job-section" id="languages-section">
+                <h2 class="section-title">Jobs by Language Requirements</h2>
+                <div class="loading-spinner" id="languages-loading">
+                    <div class="spinner"></div>
+                    <p>Loading jobs...</p>
+                </div>
+                <div class="jobs-grid" id="languages-jobs"></div>
+            </div>
+
+            <div class="job-section" id="topRated-section">
+                <h2 class="section-title">Top Rated Jobs</h2>
+                <div class="loading-spinner" id="topRated-loading">
+                    <div class="spinner"></div>
+                    <p>Loading jobs...</p>
+                </div>
+                <div class="jobs-grid" id="topRated-jobs"></div>
+            </div>
+        </div>
+
+        <!-- Job Details View -->
+        <div id="job-details-view" class="job-details-view">
+            <button class="back-button" id="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Jobs
+            </button>
+            <div class="job-details-card" id="job-details-content">
+                <!-- Content will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API base URL - adjust this to match your backend URL
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // State management
+        const state = {
+            currentTab: 'all',
+            appliedJobs: JSON.parse(localStorage.getItem('appliedJobs')) || [],
+            currentJobDetails: null
+        };
+
+        // DOM elements
+        const jobsView = document.getElementById('jobs-view');
+        const jobDetailsView = document.getElementById('job-details-view');
+        const backButton = document.getElementById('back-button');
+        const jobDetailsContent = document.getElementById('job-details-content');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up tab switching
+            setupTabs();
+
+            // Load initial jobs
+            loadJobsForTab(state.currentTab);
+
+            // Set up back button
+            backButton.addEventListener('click', showJobsView);
+        });
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.category-tab');
+            const sections = document.querySelectorAll('.job-section');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Update UI
+                    tabs.forEach(t => t.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Update state and load jobs
+                    state.currentTab = this.getAttribute('data-tab');
+                    loadJobsForTab(state.currentTab);
+                });
+            });
+        }
+
+        async function loadJobsForTab(tabId) {
+            const loadingElement = document.getElementById(`${tabId}-loading`);
+            const jobsContainer = document.getElementById(`${tabId}-jobs`);
+
+            // Show loading
+            loadingElement.classList.add('active');
+            jobsContainer.innerHTML = '';
+
+            try {
+                let url = `${API_BASE_URL}/jobs`;
+
+                // Add filters based on tab
+                if (tabId === 'skills') {
+                    // In a real app, you would get the user's skills from their profile
+                    url += '?skills=react,javascript,html,css';
+                } else if (tabId === 'languages') {
+                    url += '?languages=english';
+                } else if (tabId === 'topRated') {
+                    url += '?minRating=4.8';
+                }
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch jobs');
+                }
+
+                const {
+                    jobs
+                } = await response.json();
+                displayJobs(jobs, jobsContainer);
+            } catch (error) {
+                console.error(`Error loading ${tabId} jobs:`, error);
+                jobsContainer.innerHTML = `<p class="error">${error.message}</p>`;
+            } finally {
+                loadingElement.classList.remove('active');
+            }
+        }
+
+        function displayJobs(jobs, container) {
+            if (!jobs || jobs.length === 0) {
+                container.innerHTML = '<p>No jobs found matching your criteria.</p>';
+                return;
+            }
+
+            jobs.forEach(job => {
+                const jobCard = createJobCard(job);
+                container.appendChild(jobCard);
+
+                // Add click event to view details
+                jobCard.addEventListener('click', () => showJobDetails(job));
+            });
+        }
+
+        function createJobCard(job) {
+            const isApplied = state.appliedJobs.includes(job._id);
+
+            const jobCard = document.createElement('div');
+            jobCard.className = 'job-card';
+            jobCard.innerHTML = `
+                <h3 class="job-title">${job.title}</h3>
+                <div class="job-client"><i class="fas fa-user-tie"></i> ${job.client?.name || 'Anonymous'}</div>
+                <p class="job-description">${job.description.length > 100 ? job.description.substring(0, 100) + '...' : job.description}</p>
+                <div class="job-skills">
+                    ${job.skillsRequired?.map(skill => `<span class="skill-tag">${skill}</span>`).join('') || ''}
+                </div>
+                <div class="job-meta">
+                    <span class="price-tag">$${job.budget}</span>
+                    ${job.rating ? `<span class="job-rating"><i class="fas fa-star"></i> ${job.rating.toFixed(1)}</span>` : ''}
+                </div>
+                ${isApplied ? '<div class="applied-badge"><i class="fas fa-check"></i> Applied</div>' : ''}
+            `;
+            return jobCard;
+        }
+        
+        async function showJobDetails(job) {
+            state.currentJobDetails = job;
+            const isApplied = state.appliedJobs.includes(job._id);
+            
+            // Try to fetch full job details if we don't have them
+            if (!job.client || !job.description) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/jobs/${job._id}`);
+                    if (response.ok) {
+                        job = await response.json();
+                    }
+                } catch (error) {
+                    console.error('Error fetching job details:', error);
+                }
+            }
+            
+            // Populate job details
+            jobDetailsContent.innerHTML = `
+                <h2>${job.title}</h2>
+                <p class="job-client"><i class="fas fa-user-tie"></i> ${job.client?.name || 'Anonymous'}</p>
+                <p class="job-description">${job.description}</p>
+                
+                ${job.client ? `
+                <div class="client-info">
+                    <h3>Client Information</h3>
+                    <p><strong>Name:</strong> ${job.client.name}</p>
+                    ${job.client.email ? `<p><strong>Email:</strong> ${job.client.email}</p>` : ''}
+                    ${job.client.rating ? `<p><strong>Rating:</strong> ${job.client.rating.toFixed(1)} ★</p>` : ''}
+                </div>
+                ` : ''}
+                
+                <div class="job-skills">
+                    <h3>Required Skills:</h3>
+                    ${job.skillsRequired?.map(skill => `<span class="skill-tag">${skill}</span>`).join('') || 'No specific skills required'}
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                    <div class="price-tag">$${job.budget}</div>
+                    <button class="apply-button ${isApplied ? 'applied' : ''}" id="apply-button" 
+                            ${isApplied ? 'disabled' : ''}>
+                        ${isApplied ? 'Applied ✓' : 'Apply Now'}
+                    </button>
+                </div>
+            `;
+            
+            // Set up apply button if not already applied
+            if (!isApplied) {
+                document.getElementById('apply-button').addEventListener('click', () => applyForJob(job._id));
+            }
+            
+            // Switch views
+            jobsView.style.display = 'none';
+            jobDetailsView.classList.add('active');
+        }
+        
+        function showJobsView() {
+            jobsView.style.display = 'block';
+            jobDetailsView.classList.remove('active');
+            
+            // Refresh jobs to show applied status
+            loadJobsForTab(state.currentTab);
+        }
+        
+        async function applyForJob(jobId) {
+            if (!state.appliedJobs.includes(jobId)) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/jobs/${jobId}/apply`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Add authorization header if needed
+                            // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({
+                            proposal: "I'm interested in this position" // In real app, get from a form
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to submit application');
+                    }
+                    
+                    state.appliedJobs.push(jobId);
+                    localStorage.setItem('appliedJobs', JSON.stringify(state.appliedJobs));
+                    
+                    // Update UI
+                    const applyButton = document.getElementById('apply-button');
+                    applyButton.textContent = 'Applied ✓';
+                    applyButton.classList.add('applied');
+                    applyButton.disabled = true;
+                    
+                    // Show confirmation
+                    alert('Application submitted successfully!');
+                } catch (error) {
+                    console.error('Error applying for job:', error);
+                    alert(`Error: ${error.message}`);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

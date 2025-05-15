@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal - Browse Jobs</title>
+    <!-- Your existing styles remain the same -->
+</head>
+
+<body>
+    <header>
+        <!-- Your existing header remains the same -->
+    </header>
+
+    <section class="search-section">
+        <div class="container">
+            <form class="search-form" id="searchForm">
+                <input type="text" class="search-input" id="searchInput" placeholder="Job title, keywords, or company">
+                <input type="text" class="search-input" id="locationInput" placeholder="Location">
+                <button type="submit" class="search-button">Search Jobs</button>
+            </form>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">Filter by:</span>
+                <select class="filter-select" id="jobTypeFilter">
+                    <option value="">All Jobs</option>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="remote">Remote</option>
+                    <option value="contract">Contract</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Sort by:</span>
+                <select class="filter-select" id="sortBy">
+                    <option value="newest">Most Recent</option>
+                    <option value="salary">Highest Salary</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="job-listings" id="jobListings">
+            <!-- Jobs will be loaded here dynamically -->
+            <div class="loading">Loading jobs...</div>
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be loaded here dynamically -->
+        </div>
+    </main>
+
+    <script>
+        // API base URL - adjust this to match your backend URL
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // DOM elements
+        const jobListingsEl = document.getElementById('jobListings');
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const locationInput = document.getElementById('locationInput');
+        const jobTypeFilter = document.getElementById('jobTypeFilter');
+        const sortBy = document.getElementById('sortBy');
+        const paginationEl = document.getElementById('pagination');
+
+        // Current state
+        let currentPage = 1;
+        const jobsPerPage = 6;
+        let totalJobs = 0;
+
+        // Fetch jobs from API
+        async function fetchJobs(page = 1) {
+            const searchQuery = searchInput.value;
+            const location = locationInput.value;
+            const type = jobTypeFilter.value;
+            const sort = sortBy.value;
+
+            let url = `${API_BASE_URL}/jobs?page=${page}&limit=${jobsPerPage}`;
+
+            // Add filters to URL
+            if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
+            if (location) url += `&location=${encodeURIComponent(location)}`;
+            if (type) url += `&type=${type}`;
+            if (sort) url += `&sort=${sort}`;
+
+            try {
+                jobListingsEl.innerHTML = '<div class="loading">Loading jobs...</div>';
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch jobs');
+                }
+
+                const data = await response.json();
+                totalJobs = data.total || data.jobs.length;
+
+                displayJobs(data.jobs);
+                setupPagination(data.total, page);
+            } catch (error) {
+                console.error('Error fetching jobs:', error);
+                jobListingsEl.innerHTML = `<div class="error">${error.message}</div>`;
+            }
+        }
+
+        // Display jobs in the UI
+        function displayJobs(jobs) {
+            if (!jobs || jobs.length === 0) {
+                jobListingsEl.innerHTML = '<div class="no-jobs">No jobs found matching your criteria.</div>';
+                return;
+            }
+
+            jobListingsEl.innerHTML = jobs.map(job => `
+                <div class="job-card" data-id="${job._id}">
+                    <h3 class="job-title">${job.title}</h3>
+                    <p class="job-company">${job.client?.name || 'Unknown Company'}</p>
+                    
+                    <p class="job-location">
+                        <i class="fas fa-map-marker-alt"></i> ${job.location || 'Location not specified'}
+                    </p>
+                    <p class="job-salary">
+                        <i class="fas fa-dollar-sign"></i> $${job.budget} ${job.salaryType === 'hourly' ? 'per hour' : job.salaryType === 'fixed' ? 'fixed price' : ''}
+                    </p>
+                    <p class="job-type">
+                        <i class="fas fa-briefcase"></i> ${job.type || 'Not specified'}
+                    </p>
+                    
+                    <p class="job-description">
+                        ${job.description.length > 150 ? job.description.substring(0, 150) + '...' : job.description}
+                    </p>
+                    
+                    <a href="job-apply.html?jobId=${job._id}" class="apply-button">Apply Now</a>
+                    <p class="job-posted">Posted ${formatDate(job.createdAt)}</p>
+                </div>
+            `).join('');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Setup pagination
+        function setupPagination(totalJobs, currentPage) {
+            const totalPages = Math.ceil(totalJobs / jobsPerPage);
+
+            if (totalPages <= 1) {
+                paginationEl.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+
+            if (currentPage > 1) {
+                paginationHTML += `<a href="#" data-page="${currentPage - 1}">&laquo;</a>`;
+            }
+
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHTML += `<a href="#" data-page="${i}" ${i === currentPage ? 'class="active"' : ''}>${i}</a>`;
+            }
+
+            if (currentPage < totalPages) {
+                paginationHTML += `<a href="#" data-page="${currentPage + 1}">&raquo;</a>`;
+            }
+
+            paginationEl.innerHTML = paginationHTML;
+
+            // Add click event to pagination links
+            document.querySelectorAll('#pagination a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage = parseInt(link.dataset.page);
+                    fetchJobs(currentPage);
+                });
+            });
+        }
+
+        // Event listeners
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            currentPage = 1;
+            fetchJobs();
+        });
+
+        jobTypeFilter.addEventListener('change', () => {
+            currentPage = 1;
+            fetchJobs();
+        });
+
+        sortBy.addEventListener('change', () => {
+            currentPage = 1;
+            fetchJobs();
+        });
+
+        // Initial load
+        fetchJobs();
+    </script>
+</body>
+
+</html>

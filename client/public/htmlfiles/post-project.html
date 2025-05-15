@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Your Project</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .form-section {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: white;
+            overflow-y: auto;
+        }
+        
+        .image-section {
+            flex: 1;
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+        
+        .logo img {
+            height: 80px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            max-width: 80%;
+        }
+        
+        .description-prompt {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        #project-description {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: vertical;
+            margin-bottom: 30px;
+        }
+        
+        #project-description:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .shortcut-hint {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .next-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        #auth-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+        }
+        
+        #auth-modal h2 {
+            margin-bottom: 1rem;
+        }
+        
+        #login-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .next-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+            .image-section {
+                height: 300px;
+                flex: none;
+            }
+            .form-section {
+                padding: 40px 20px;
+            }
+            .subtitle {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-section">
+        <div class="logo">
+            <img src="public/images/braintel.png" alt="Logo">
+        </div>
+        <form id="project-form">
+            <h1>Tell us what you need done.</h1>
+            <p class="subtitle">We'll guide you to create the perfect brief. The more detail the better.</p>
+
+            <p class="description-prompt">Enter a few bullet points or a full description.</p>
+
+            <textarea id="project-description" name="project-description" placeholder="Example: 
+- Need a website for my bakery business
+- Should include online ordering system
+- Must be mobile-friendly
+- Prefer clean, modern design"></textarea>
+            <div id="auth-modal" style="display: none;">
+                <h2>Authentication Required</h2>
+                <p>Please log in to post a project</p>
+                <button id="login-btn">Log In</button>
+            </div>
+
+
+            <div class="form-footer">
+                <span class="shortcut-hint">Press CTRL+ENTER to submit</span>
+                <button type="submit" class="next-btn">Next</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="image-section">
+
+    </div>
+
+
+    <script src="resources/scripts/post-project.js"></script>
+</body>
+
+</html>

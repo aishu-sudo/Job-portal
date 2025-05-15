@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Client Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f4f7fc;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0c2333, #081c30);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 22px;
+            font-weight: 500;
+        }
+        
+        .sidebar button {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 16px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .sidebar button:hover,
+        .sidebar button.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .logout {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        #mainContent {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .content-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+        
+        .welcome-message {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .welcome-message h1 {
+            color: #0c2333;
+            margin-bottom: 15px;
+        }
+        
+        .welcome-message p {
+            color: #555;
+            line-height: 1.6;
+        }
+        /* Header with notification */
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .notification-container {
+            position: relative;
+        }
+        
+        .notification-bell {
+            font-size: 20px;
+            color: #0c2333;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff5722;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notification-dropdown {
+            position: absolute;
+            right: 0;
+            top: 40px;
+            width: 350px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .notification-dropdown.show {
+            display: block;
+        }
+        
+        .notification-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-header h3 {
+            margin: 0;
+            color: #0c2333;
+        }
+        
+        .mark-all-read {
+            background: none;
+            border: none;
+            color: #1976d2;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .notification-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .notification-item.unread {
+            background: #f0f7ff;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #0c2333;
+        }
+        
+        .notification-message {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+            text-align: right;
+        }
+        /* Client-specific stats */
+        
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0c2333;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0c2333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2><i class="fas fa-building"></i> Client</h2>
+        <button onclick="loadSection('dashboard')" id="dashboardBtn" class="active"><i class="fas fa-chart-line"></i> Dashboard</button>
+        <button onclick="loadSection('myProjects')" id="myProjectsBtn"><i class="fas fa-briefcase"></i> My Projects</button>
+        <button onclick="loadSection('postProject')" id="postProjectBtn"><i class="fas fa-plus-circle"></i> Post Project</button>
+        <button onclick="loadSection('applicants')" id="applicantsBtn"><i class="fas fa-users"></i> Applicants</button>
+        <button onclick="loadSection('ratingsReviews')" id="ratingsReviewsBtn"><i class="fas fa-star"></i> Ratings & Reviews</button>
+        <button onclick="loadSection('messages')" id="messagesBtn"><i class="fas fa-envelope"></i> Messages</button>
+        <button onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div id="mainContent">
+        <div class="dashboard-header">
+            <h1>Client Dashboard</h1>
+            <div class="notification-container">
+                <div class="notification-bell" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <button class="mark-all-read" onclick="markAllAsRead()">Mark all as read</button>
+                    </div>
+                    <div class="notification-item unread">
+                        <div class="notification-title">New Application</div>
+                        <div class="notification-message">John Doe has applied to your project "Website Redesign".</div>
+                        <div class="notification-time">10 minutes ago</div>
+                    </div>
+                    <div class="notification-item unread">
+                        <div class="notification-title">Project Update</div>
+                        <div class="notification-message">Sarah has submitted the first draft for your review.</div>
+                        <div class="notification-time">2 hours ago</div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-title">Payment Sent</div>
+                        <div class="notification-message">Your payment of $500 for "Mobile App Development" has been processed.</div>
+                        <div class="notification-time">1 day ago</div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-title">New Message</div>
+                        <div class="notification-message">You have a new message from DesignerPro regarding your project.</div>
+                        <div class="notification-time">2 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="welcome-message" id="dashboardContent">
+            <h1>Welcome to your Client Dashboard</h1>
+            <p>Here you can manage your projects, review applicants, communicate with freelancers, and track progress. Use the sidebar to navigate between different sections.</p>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3><i class="fas fa-briefcase" style="color: #1976d2;"></i> Active Projects</h3>
+                    <div class="stat-value">8</div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-user-check" style="color: #388e3c;"></i> Hired Freelancers</h3>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-envelope" style="color: #ffa000;"></i> Unread Messages</h3>
+                    <div class="stat-value">5</div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-file-alt" style="color: #9c27b0;"></i> New Applications</h3>
+                    <div class="stat-value">7</div>
+                </div>
+            </div>
+        </div>
+
+        <iframe id="contentFrame" class="content-frame" style="display: none;"></iframe>
+    </div>
+
+    <script>
+        // Set dashboard as active by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dashboardBtn').classList.add('active');
+        });
+
+        function loadSection(section) {
+            // Hide welcome message and show iframe
+            document.getElementById('dashboardContent').style.display = 'none';
+            document.getElementById('contentFrame').style.display = 'block';
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.sidebar button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Load the appropriate content
+            const frame = document.getElementById('contentFrame');
+
+            switch (section) {
+                case 'dashboard':
+                    document.getElementById('dashboardContent').style.display = 'block';
+                    frame.style.display = 'none';
+                    break;
+                case 'myProjects':
+                    frame.src = 'myProjects.html';
+                    break;
+                case 'postProject':
+                    frame.src = 'postProject.html';
+                    break;
+                case 'applicants':
+                    frame.src = 'applicantsPage.html';
+                    break;
+                case 'ratingsReviews':
+                    frame.src = 'RatingsReviews.html';
+                    break;
+                case 'messages':
+                    frame.src = 'Message.html';
+                    break;
+                default:
+                    document.getElementById('dashboardContent').style.display = 'block';
+                    frame.style.display = 'none';
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function markAllAsRead() {
+            const unreadItems = document.querySelectorAll('.notification-item.unread');
+            const badge = document.querySelector('.notification-badge');
+
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+            });
+
+            badge.textContent = '0';
+        }
+
+        // Close notifications when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notificationDropdown');
+            const bell = document.querySelector('.notification-bell');
+
+            if (!bell.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function logout() {
+            // Add logout functionality here
+            alert('Logging out...');
+            // In a real application, you would redirect to logout URL
+            // window.location.href = '/logout';
+        }
+    </script>
+
+</body>
+
+</html>
