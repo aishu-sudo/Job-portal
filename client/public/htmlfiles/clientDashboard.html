@@ -237,7 +237,7 @@
         <h2><i class="fas fa-building"></i> Client</h2>
         <button onclick="loadSection('dashboard')" id="dashboardBtn" class="active"><i class="fas fa-chart-line"></i> Dashboard</button>
         <button onclick="loadSection('myProjects')" id="myProjectsBtn"><i class="fas fa-briefcase"></i> My Projects</button>
-        <button onclick="loadSection('postProject')" id="postProjectBtn"><i class="fas fa-plus-circle"></i> Post Project</button>
+        <button onclick="loadSection('post-project')" id="post-projectBtn"><i class="fas fa-plus-circle"></i> Post Project</button>
         <button onclick="loadSection('applicants')" id="applicantsBtn"><i class="fas fa-users"></i> Applicants</button>
         <button onclick="loadSection('ratingsReviews')" id="ratingsReviewsBtn"><i class="fas fa-star"></i> Ratings & Reviews</button>
         <button onclick="loadSection('messages')" id="messagesBtn"><i class="fas fa-envelope"></i> Messages</button>
@@ -338,8 +338,10 @@
                 case 'myProjects':
                     frame.src = 'myProjects.html';
                     break;
-                case 'postProject':
-                    frame.src = 'postProject.html';
+                case 'post-project':
+                    document.getElementById('post-projectBtn').classList.add('active');
+                    frame.src = 'post-project.html';
+                    frame.style.display = 'block';
                     break;
                 case 'applicants':
                     frame.src = 'applicantsPage.html';

@@ -1,6 +1,6 @@
 {
     "server": {
         "baseDir": "public",
-        "port": 5000
+        "port": 3000
     }
 }
