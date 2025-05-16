@@ -1,17 +1,17 @@
-// backend/server.js
 const express = require('express');
-const cors = require('cors');
+const mongoose = require('mongoose');
+const jobRoutes = require('./routes/job');
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use('/api/jobs', jobRoutes);
 
-const PORT = 5000;
+mongoose.connect('mongodb://localhost:27017/freelance', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }).then(() => console.log('MongoDB connected'))
+    .catch((err) => console.log(err));
 
-app.get('/api/message', (req, res) => {
-    res.json({ message: 'Hello from Express backend!' });
-});
-
-app.listen(PORT, () => {
-    console.log(`Backend server running at http://localhost:${PORT}`);
+app.listen(5000, () => {
+    console.log('Server running on port 5000');
 });

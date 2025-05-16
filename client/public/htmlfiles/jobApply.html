@@ -93,27 +93,22 @@
             doc,
             getDoc
         } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
         const firebaseConfig = {
-
             apiKey: "AIzaSyD8RTED-Pc532DVq0JtL-s-85Tx7OCZXCQ",
-
             authDomain: "freelancing-job-portal-60da1.firebaseapp.com",
-
             projectId: "freelancing-job-portal-60da1",
-
-            storageBucket: "freelancing-job-portal-60da1.firebasestorage.app",
-
+            storageBucket: "freelancing-job-portal-60da1.appspot.com",
             messagingSenderId: "300920992917",
-
             appId: "1:300920992917:web:8980b888330e4af189579c"
-
         };
-
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
         const urlParams = new URLSearchParams(window.location.search);
         const jobId = urlParams.get("jobId");
+
         async function loadJobDetails() {
             if (!jobId) return alert("No job ID provided.");
             const jobRef = doc(db, "jobs", jobId);
@@ -122,16 +117,49 @@
                 const job = jobSnap.data();
                 document.querySelector("h2").textContent = job.title || "Job Title";
                 document.querySelector(".job-details").innerHTML = `
-    <p><strong>Client:</strong> ${job.clientName || "Anonymous"}</p>
-    <p><strong>Description:</strong> ${job.description}</p>
-    <p><strong>Skills Required:</strong> ${job.skills}</p>
-    <p><strong>Budget:</strong> $${job.budget}</p>
-    `;
+                    <p><strong>Client:</strong> ${job.clientName || "Anonymous"}</p>
+                    <p><strong>Description:</strong> ${job.description}</p>
+                    <p><strong>Skills Required:</strong> ${job.skills}</p>
+                    <p><strong>Budget:</strong> $${job.budget}</p>
+                `;
             } else {
                 alert("Job not found.");
             }
         }
+
         loadJobDetails();
+
+        // Submit Proposal to Backend API
+        document.getElementById("applyForm").addEventListener("submit", async(e) => {
+            e.preventDefault();
+            const proposal = document.getElementById("proposal").value.trim();
+            if (!proposal) return alert("Proposal cannot be empty!");
+
+            try {
+                const response = await fetch("http://localhost:5000/api/apply-job", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        jobId: jobId,
+                        proposal: proposal,
+                        userId: "freelancer123"
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message || "Proposal submitted successfully!");
+                    document.getElementById("proposal").value = "";
+                } else {
+                    alert(result.message || "Submission failed.");
+                }
+            } catch (err) {
+                console.error("API error:", err);
+                alert("Error submitting proposal.");
+            }
+        });
     </script>
 
 
