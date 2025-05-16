@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -21,6 +20,35 @@
             margin: 0 auto;
         }
         
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .search-button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: #4338ca;
+        }
+        
         .category-tabs {
             display: flex;
             gap: 20px;
@@ -34,7 +62,7 @@
             color: #1e40af;
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
         
         .category-tab.active {
@@ -46,6 +74,7 @@
             display: flex;
             gap: 10px;
             margin: 10px 0 20px 20px;
+            flex-wrap: wrap;
         }
         
         .language-subtab {
@@ -56,7 +85,7 @@
             cursor: pointer;
             font-weight: 500;
             font-size: 14px;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
         
         .language-subtab.active {
@@ -65,8 +94,8 @@
         }
         
         .jobs-grid {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 20px;
         }
         
@@ -75,8 +104,10 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            transition: 0.3s;
+            transition: all 0.3s;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
         
         .job-card:hover {
@@ -102,6 +133,7 @@
             color: #4a5568;
             line-height: 1.5;
             margin-bottom: 10px;
+            flex-grow: 1;
         }
         
         .job-skills {
@@ -125,6 +157,7 @@
             justify-content: space-between;
             font-size: 14px;
             color: #4a5568;
+            margin-top: auto;
         }
         
         .applied-badge {
@@ -140,6 +173,7 @@
             display: none;
             text-align: center;
             padding: 20px;
+            grid-column: 1 / -1;
         }
         
         .loading-spinner.active {
@@ -168,7 +202,14 @@
             margin-bottom: 15px;
             color: #2d3748;
         }
-        /* Job Details View */
+        
+        .job-section {
+            display: none;
+        }
+        
+        .job-section.active {
+            display: block;
+        }
         
         .job-details-view {
             display: none;
@@ -188,6 +229,13 @@
             cursor: pointer;
             font-size: 16px;
             margin-bottom: 20px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: #f0f4ff;
         }
         
         .job-details-card {
@@ -208,11 +256,12 @@
             background-color: #4f46e5;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 5px;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-size: 16px;
         }
         
         .apply-button:hover {
@@ -229,26 +278,72 @@
             font-weight: bold;
             color: #1e40af;
         }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #4a5568;
+        }
+        
+        .save-job-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ccc;
+            font-size: 20px;
+            transition: color 0.3s;
+            margin-left: 10px;
+        }
+        
+        .save-job-button.saved {
+            color: #e74c3c;
+        }
+        
+        .job-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-container {
+                flex-direction: column;
+            }
+            .category-tabs {
+                flex-wrap: wrap;
+            }
+        }
     </style>
-
-
 </head>
 
 <body>
     <div class="container">
         <!-- Main Jobs View -->
         <div id="jobs-view">
+            <div class="search-container">
+                <input type="text" class="search-input" id="global-search" placeholder="Search jobs by title, skills, or company...">
+                <button class="search-button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
             <div class="category-tabs">
                 <div class="category-tab active" data-tab="skills">Skills</div>
                 <div class="category-tab" data-tab="languages">Languages</div>
                 <div class="category-tab" data-tab="topRated">Top Rated</div>
+                <div class="category-tab" data-tab="saved">Saved Jobs</div>
             </div>
 
-            ```
             <!-- Language Subtabs (hidden by default) -->
             <div class="language-subtabs" id="language-subtabs" style="display: none;">
                 <div class="language-subtab active" data-language="all">All Languages</div>
                 <div class="language-subtab" data-language="english">English</div>
+                <div class="language-subtab" data-language="spanish">Spanish</div>
                 <div class="language-subtab" data-language="japanese">Japanese</div>
                 <div class="language-subtab" data-language="italian">Italian</div>
             </div>
@@ -279,13 +374,22 @@
                 </div>
                 <div class="jobs-grid" id="topRated-jobs"></div>
             </div>
+
+            <div class="job-section" id="saved-section">
+                <h2 class="section-title">Your Saved Jobs</h2>
+                <div class="loading-spinner" id="saved-loading">
+                    <div class="spinner"></div>
+                    <p>Loading saved jobs...</p>
+                </div>
+                <div class="jobs-grid" id="saved-jobs"></div>
+            </div>
         </div>
 
         <!-- Job Details View -->
         <div id="job-details-view" class="job-details-view">
             <button class="back-button" id="back-button">
-            <i class="fas fa-arrow-left"></i> Back to Jobs
-        </button>
+                <i class="fas fa-arrow-left"></i> Back to Jobs
+            </button>
             <div class="job-details-card" id="job-details-content">
                 <!-- Content will be inserted here by JavaScript -->
             </div>
@@ -293,121 +397,206 @@
     </div>
 
     <script>
-        // Job data
         const jobsData = {
             skills: [{
                 id: 'skill1',
                 title: 'Website Development with React',
                 company: 'TechSolutions Inc.',
-                description: 'Build a responsive e-commerce website with React and Node.js backend. Must have experience with Redux and REST APIs.',
-                skills: ['React', 'JavaScript', 'Redux', 'HTML/CSS'],
+                description: 'Build a responsive e-commerce website with React and Node.js backend. Must have experience with Redux and REST APIs. The project will involve creating a modern UI with responsive design principles and integrating with various third-party services.',
+                skills: ['React', 'JavaScript', 'Redux', 'HTML/CSS', 'Node.js'],
                 price: '$800 - $1,200',
                 rating: 4.9,
                 reviews: 32,
+                postedDate: '2023-06-15',
                 client: {
                     name: 'John Smith',
                     email: 'john@techsolutions.com',
                     rating: 4.8,
                     bio: 'TechSolutions Inc. is a leading web development company specializing in e-commerce solutions for small and medium businesses.',
-                    memberSince: 'Jan 2020'
+                    memberSince: 'Jan 2020',
+                    location: 'San Francisco, CA'
                 }
             }, {
                 id: 'skill2',
                 title: 'Mobile App UI/UX Design',
                 company: 'Creative Minds LLC',
-                description: 'UI/UX design for fitness tracking mobile application. Need wireframes and high-fidelity prototypes.',
-                skills: ['Figma', 'Adobe XD', 'UI Design', 'UX Research'],
+                description: 'UI/UX design for fitness tracking mobile application. Need wireframes and high-fidelity prototypes. The app should follow material design guidelines and include animations for smooth transitions between screens.',
+                skills: ['Figma', 'Adobe XD', 'UI Design', 'UX Research', 'Prototyping'],
                 price: '$500 - $1,000',
                 rating: 4.8,
                 reviews: 24,
+                postedDate: '2023-06-10',
                 client: {
                     name: 'Sarah Johnson',
                     email: 'sarah@creativeminds.com',
                     rating: 4.5,
                     bio: 'Creative Minds LLC focuses on creating beautiful and functional designs for mobile applications in the health and fitness space.',
-                    memberSince: 'Mar 2019'
+                    memberSince: 'Mar 2019',
+                    location: 'New York, NY'
+                }
+            }, {
+                id: 'skill3',
+                title: 'Python Data Analysis',
+                company: 'Data Insights Co.',
+                description: 'Analyze large datasets using Python and create visualizations. Must be proficient in pandas, numpy, and matplotlib. The project involves cleaning data, performing statistical analysis, and creating interactive dashboards.',
+                skills: ['Python', 'Pandas', 'Data Analysis', 'Matplotlib', 'Jupyter'],
+                price: '$750 - $1,500',
+                rating: 4.7,
+                reviews: 18,
+                postedDate: '2023-06-12',
+                client: {
+                    name: 'Michael Brown',
+                    email: 'michael@datainsights.co',
+                    rating: 4.6,
+                    bio: 'We help businesses make data-driven decisions through advanced analytics and visualization.',
+                    memberSince: 'Aug 2018',
+                    location: 'Chicago, IL'
+                }
+            }, {
+                id: 'skill4',
+                title: 'WordPress Website Redesign',
+                company: 'Small Business Solutions',
+                description: 'Redesign an existing WordPress website with modern aesthetics and improved user experience. Must have experience with Elementor and WooCommerce. The site needs to be mobile-friendly and optimized for speed.',
+                skills: ['WordPress', 'Elementor', 'WooCommerce', 'CSS', 'Responsive Design'],
+                price: '$400 - $800',
+                rating: 4.6,
+                reviews: 15,
+                postedDate: '2023-06-08',
+                client: {
+                    name: 'Lisa Wong',
+                    email: 'lisa@sbsolutions.com',
+                    rating: 4.4,
+                    bio: 'We provide affordable web solutions for small businesses and entrepreneurs.',
+                    memberSince: 'Nov 2019',
+                    location: 'Austin, TX'
                 }
             }],
             languages: [{
                 id: 'lang1',
                 title: 'Spanish-English Translator',
                 company: 'Global Translations',
-                description: 'Translate business documents from Spanish to English. Must be native English speaker with business vocabulary.',
-                skills: ['Spanish', 'English', 'Translation'],
+                description: 'Translate business documents from Spanish to English. Must be native English speaker with business vocabulary. The documents include contracts, reports, and marketing materials requiring precise terminology.',
+                skills: ['Spanish', 'English', 'Translation', 'Business Vocabulary'],
                 price: '$0.10/word',
                 rating: 4.8,
                 reviews: 45,
+                postedDate: '2023-06-14',
                 client: {
                     name: 'Maria Gonzalez',
                     email: 'maria@globaltrans.com',
                     rating: 4.7,
                     bio: 'Global Translations provides language services to international businesses. We work with native speakers only.',
-                    memberSince: 'Jun 2018'
+                    memberSince: 'Jun 2018',
+                    location: 'Miami, FL'
                 }
             }, {
                 id: 'lang2',
                 title: 'Japanese Content Writer',
                 company: 'Tokyo Media',
-                description: 'Write engaging articles in Japanese for our tech blog. Native Japanese speakers preferred.',
-                skills: ['Japanese', 'Content Writing', 'Tech Knowledge'],
+                description: 'Write engaging articles in Japanese for our tech blog. Native Japanese speakers preferred. Topics include software development, AI trends, and gadget reviews. Minimum 1000 words per article.',
+                skills: ['Japanese', 'Content Writing', 'Tech Knowledge', 'Blogging'],
                 price: '$0.15/word',
                 rating: 4.7,
                 reviews: 28,
+                postedDate: '2023-06-09',
                 client: {
                     name: 'Taro Yamada',
                     email: 'taro@tokyomedia.jp',
                     rating: 4.6,
                     bio: 'Tokyo Media publishes tech news and reviews for the Japanese market.',
-                    memberSince: 'May 2019'
+                    memberSince: 'May 2019',
+                    location: 'Tokyo, Japan'
                 }
             }, {
                 id: 'lang3',
                 title: 'Italian-English Interpreter',
                 company: 'European Business Solutions',
-                description: 'Provide real-time interpretation for business meetings between Italian and English speakers.',
-                skills: ['Italian', 'English', 'Interpretation'],
+                description: 'Provide real-time interpretation for business meetings between Italian and English speakers. Meetings occur weekly via Zoom and cover topics in finance and international trade.',
+                skills: ['Italian', 'English', 'Interpretation', 'Business Communication'],
                 price: '$50/hour',
                 rating: 4.9,
                 reviews: 36,
+                postedDate: '2023-06-11',
                 client: {
                     name: 'Giovanni Rossi',
                     email: 'giovanni@eubsolutions.com',
                     rating: 4.8,
                     bio: 'We facilitate business communications across Europe.',
-                    memberSince: 'Sep 2018'
+                    memberSince: 'Sep 2018',
+                    location: 'Milan, Italy'
+                }
+            }, {
+                id: 'lang4',
+                title: 'French Proofreader',
+                company: 'Paris Publishing',
+                description: 'Proofread French manuscripts for grammatical accuracy and style consistency. Must have experience in literary editing and knowledge of publishing standards.',
+                skills: ['French', 'Proofreading', 'Editing', 'Literature'],
+                price: '$0.08/word',
+                rating: 4.7,
+                reviews: 22,
+                postedDate: '2023-06-07',
+                client: {
+                    name: 'Sophie Laurent',
+                    email: 'sophie@parispublishing.fr',
+                    rating: 4.5,
+                    bio: 'We publish French literature and academic works for international audiences.',
+                    memberSince: 'Feb 2020',
+                    location: 'Paris, France'
                 }
             }],
             topRated: [{
                 id: 'top1',
                 title: 'Full Stack Developer (Remote)',
                 company: 'Startup Ventures',
-                description: 'Join our team for a 3-month project building a SaaS platform. Must be available for daily standups.',
-                skills: ['React', 'Node.js', 'MongoDB', 'AWS'],
+                description: 'Join our team for a 3-month project building a SaaS platform. Must be available for daily standups. The project uses modern technologies including React, Node.js, and PostgreSQL with a microservices architecture.',
+                skills: ['React', 'Node.js', 'MongoDB', 'AWS', 'Microservices'],
                 price: '$5,000 - $8,000',
                 rating: 5.0,
                 reviews: 42,
+                postedDate: '2023-06-13',
                 client: {
                     name: 'David Chen',
                     email: 'david@startupventures.com',
                     rating: 4.9,
                     bio: 'Startup Ventures builds innovative tech solutions for the education sector. We work with top-tier developers only.',
-                    memberSince: 'Feb 2021'
+                    memberSince: 'Feb 2021',
+                    location: 'Remote'
                 }
             }, {
                 id: 'top2',
                 title: 'Technical Writer (English)',
                 company: 'Documentation Pros',
-                description: 'Create comprehensive technical documentation for our API. Must have excellent English writing skills.',
-                skills: ['English', 'Technical Writing', 'API Documentation'],
+                description: 'Create comprehensive technical documentation for our API. Must have excellent English writing skills. Documentation includes API references, tutorials, and code examples in multiple programming languages.',
+                skills: ['English', 'Technical Writing', 'API Documentation', 'Markdown'],
                 price: '$60/hour',
                 rating: 4.9,
                 reviews: 38,
+                postedDate: '2023-06-06',
                 client: {
                     name: 'Emily Wilson',
                     email: 'emily@docpros.com',
                     rating: 4.8,
                     bio: 'We provide top-quality documentation services for tech companies worldwide.',
-                    memberSince: 'Apr 2020'
+                    memberSince: 'Apr 2020',
+                    location: 'Boston, MA'
+                }
+            }, {
+                id: 'top3',
+                title: 'Senior UX Researcher',
+                company: 'Digital Experience Labs',
+                description: 'Conduct user research and usability testing for enterprise applications. Must have 5+ years experience with qualitative and quantitative research methods. You will work closely with product teams to inform design decisions.',
+                skills: ['UX Research', 'Usability Testing', 'User Interviews', 'Data Analysis'],
+                price: '$8,000 - $12,000',
+                rating: 4.9,
+                reviews: 35,
+                postedDate: '2023-06-05',
+                client: {
+                    name: 'Robert Kim',
+                    email: 'robert@dxlabs.com',
+                    rating: 4.9,
+                    bio: 'We specialize in creating exceptional digital experiences for enterprise clients.',
+                    memberSince: 'Jan 2018',
+                    location: 'Seattle, WA'
                 }
             }]
         };
@@ -417,7 +606,9 @@
             currentTab: 'skills',
             currentLanguage: 'all',
             appliedJobs: JSON.parse(localStorage.getItem('appliedJobs')) || [],
-            currentJobDetails: null
+            savedJobs: JSON.parse(localStorage.getItem('savedJobs')) || [],
+            currentJobDetails: null,
+            searchQuery: ''
         };
 
         // DOM elements
@@ -426,20 +617,22 @@
         const backButton = document.getElementById('back-button');
         const jobDetailsContent = document.getElementById('job-details-content');
         const languageSubtabs = document.getElementById('language-subtabs');
+        const globalSearch = document.getElementById('global-search');
+        const searchButton = document.getElementById('search-button');
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up tab switching
+            // Hide all sections except skills initially
+            document.querySelectorAll('.job-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById('skills-section').style.display = 'block';
+
             setupTabs();
-
-            // Set up language subtabs
             setupLanguageSubtabs();
-
-            // Load initial jobs
             loadJobsForTab(state.currentTab);
-
-            // Set up back button
             backButton.addEventListener('click', showJobsView);
+            setupSearch();
         });
 
         function setupTabs() {
@@ -461,9 +654,25 @@
                         languageSubtabs.style.display = 'none';
                     }
 
-                    // Update state and load jobs
+                    // Update state
                     state.currentTab = tabId;
-                    loadJobsForTab(tabId);
+
+                    // Hide all sections first
+                    sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+
+                    // Show the active section
+                    const activeSection = document.getElementById(`${tabId}-section`);
+                    activeSection.style.display = 'block';
+                    activeSection.classList.add('active');
+
+                    // Load the appropriate jobs
+                    if (tabId === 'saved') {
+                        loadSavedJobs();
+                    } else {
+                        loadJobsForTab(tabId);
+                    }
                 });
             });
         }
@@ -484,6 +693,42 @@
             });
         }
 
+        function setupSearch() {
+            // Search on button click
+            searchButton.addEventListener('click', function() {
+                state.searchQuery = globalSearch.value.trim().toLowerCase();
+                if (state.currentTab === 'saved') {
+                    loadSavedJobs();
+                } else {
+                    loadJobsForTab(state.currentTab);
+                }
+            });
+
+            // Search on Enter key
+            globalSearch.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    state.searchQuery = globalSearch.value.trim().toLowerCase();
+                    if (state.currentTab === 'saved') {
+                        loadSavedJobs();
+                    } else {
+                        loadJobsForTab(state.currentTab);
+                    }
+                }
+            });
+
+            // Clear search when input is empty
+            globalSearch.addEventListener('input', function() {
+                if (this.value.trim() === '') {
+                    state.searchQuery = '';
+                    if (state.currentTab === 'saved') {
+                        loadSavedJobs();
+                    } else {
+                        loadJobsForTab(state.currentTab);
+                    }
+                }
+            });
+        }
+
         function loadJobsForTab(tabId) {
             const loadingElement = document.getElementById(`${tabId}-loading`);
             const jobsContainer = document.getElementById(`${tabId}-jobs`);
@@ -494,133 +739,263 @@
 
             // Simulate API call with timeout
             setTimeout(() => {
-                let jobs = jobsData[tabId];
+                let filteredJobs = [];
 
-                // Apply additional filtering for languages tab
-                if (tabId === 'languages' && state.currentLanguage !== 'all') {
-                    jobs = jobs.filter(job =>
-                        job.skills.some(skill =>
-                            skill.toLowerCase() === state.currentLanguage ||
-                            skill.toLowerCase().includes(state.currentLanguage)
-                        )
+                // Filter based on selected tab
+                switch (tabId) {
+                    case 'skills':
+                        filteredJobs = [...jobsData.skills];
+                        break;
+                    case 'languages':
+                        if (state.currentLanguage === 'all') {
+                            filteredJobs = [...jobsData.languages];
+                        } else {
+                            filteredJobs = jobsData.languages.filter(job =>
+                                job.skills.some(skill =>
+                                    skill.toLowerCase() === state.currentLanguage ||
+                                    skill.toLowerCase().includes(state.currentLanguage)
+                                )
+                            );
+                        }
+                        break;
+                    case 'topRated':
+                        filteredJobs = [...jobsData.topRated];
+                        break;
+                    default:
+                        filteredJobs = [];
+                }
+
+                // Apply search filter if there's a query
+                if (state.searchQuery) {
+                    filteredJobs = filteredJobs.filter(job =>
+                        job.title.toLowerCase().includes(state.searchQuery) ||
+                        job.company.toLowerCase().includes(state.searchQuery) ||
+                        job.description.toLowerCase().includes(state.searchQuery) ||
+                        job.skills.some(skill => skill.toLowerCase().includes(state.searchQuery))
                     );
                 }
 
-                // Apply additional filtering for top rated tab
-                if (tabId === 'topRated') {
-                    jobs = jobs.filter(job => job.rating >= 4.8);
-                }
-
-                displayJobs(jobs, jobsContainer);
+                displayJobs(filteredJobs, jobsContainer, tabId);
                 loadingElement.classList.remove('active');
             }, 500);
         }
 
-        function displayJobs(jobs, container) {
+        function loadSavedJobs() {
+            const loadingElement = document.getElementById('saved-loading');
+            const jobsContainer = document.getElementById('saved-jobs');
+
+            loadingElement.classList.add('active');
+            jobsContainer.innerHTML = '';
+
+            setTimeout(() => {
+                // Get all jobs from all categories
+                const allJobs = [...jobsData.skills, ...jobsData.languages, ...jobsData.topRated];
+
+                // Filter for saved jobs
+                let savedJobs = allJobs.filter(job => state.savedJobs.includes(job.id));
+
+                // Apply search filter if there's a query
+                if (state.searchQuery) {
+                    savedJobs = savedJobs.filter(job =>
+                        job.title.toLowerCase().includes(state.searchQuery) ||
+                        job.company.toLowerCase().includes(state.searchQuery) ||
+                        job.description.toLowerCase().includes(state.searchQuery) ||
+                        job.skills.some(skill => skill.toLowerCase().includes(state.searchQuery))
+                    );
+                }
+
+                if (savedJobs.length === 0) {
+                    jobsContainer.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-bookmark" style="font-size: 40px; color: #ccc; margin-bottom: 15px;"></i>
+                            <h3>No saved jobs found</h3>
+                            <p>Save jobs you're interested in by clicking the bookmark icon</p>
+                        </div>
+                    `;
+                } else {
+                    displayJobs(savedJobs, jobsContainer, 'saved');
+                }
+
+                loadingElement.classList.remove('active');
+            }, 500);
+        }
+
+        function displayJobs(jobs, container, tabId) {
             if (!jobs || jobs.length === 0) {
-                container.innerHTML = '<p>No jobs found matching your criteria.</p>';
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 40px; color: #ccc; margin-bottom: 15px;"></i>
+                        <h3>No jobs found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
                 return;
             }
 
+            // Clear the container first
+            container.innerHTML = '';
+
             jobs.forEach(job => {
-                const jobCard = createJobCard(job);
+                const jobCard = createJobCard(job, tabId);
                 container.appendChild(jobCard);
 
                 // Add click event to view details
-                jobCard.addEventListener('click', () => showJobDetails(job));
+                jobCard.addEventListener('click', (e) => {
+                    // Don't trigger if clicking on save button
+                    if (!e.target.closest('.save-job-button')) {
+                        showJobDetails(job);
+                    }
+                });
             });
         }
 
-        function createJobCard(job) {
+        function createJobCard(job, tabId) {
             const isApplied = state.appliedJobs.includes(job.id);
+            const isSaved = state.savedJobs.includes(job.id);
 
             const jobCard = document.createElement('div');
             jobCard.className = 'job-card';
             jobCard.innerHTML = `
-            <h3 class="job-title">${job.title}</h3>
-            <div class="job-client"><i class="fas fa-user-tie"></i> ${job.company}</div>
-            <p class="job-description">${job.description}</p>
-            <div class="job-skills">
-                ${job.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-            </div>
-            <div class="job-meta">
-                <span class="price-tag">${job.price}</span>
-                <span class="job-rating"><i class="fas fa-star"></i> ${job.rating.toFixed(1)} (${job.reviews})</span>
-            </div>
-            ${isApplied ? '<div class="applied-badge"><i class="fas fa-check"></i> Applied</div>' : ''}
-        `;
-        return jobCard;
-    }
-
-    function showJobDetails(job) {
-        state.currentJobDetails = job;
-        const isApplied = state.appliedJobs.includes(job.id);
-        
-        // Populate job details
-        jobDetailsContent.innerHTML = `
-            <h2>${job.title}</h2>
-            <p class="job-client"><i class="fas fa-user-tie"></i> ${job.company}</p>
-            <p class="job-description">${job.description}</p>
+                <h3 class="job-title">${job.title}</h3>
+                <div class="job-client"><i class="fas fa-user-tie"></i> ${job.company}</div>
+                <p class="job-description">${job.description.substring(0, 150)}${job.description.length > 150 ? '...' : ''}</p>
+                <div class="job-skills">
+                    ${job.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                </div>
+                <div class="job-meta">
+                    <span class="price-tag">${job.price}</span>
+                    <span class="job-rating"><i class="fas fa-star"></i> ${job.rating.toFixed(1)} (${job.reviews})</span>
+                </div>
+                <div class="job-actions">
+                    ${isApplied ? '<div class="applied-badge"><i class="fas fa-check"></i> Applied</div>' : ''}
+                    <button class="save-job-button ${isSaved ? 'saved' : ''}" data-job-id="${job.id}">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            `;
             
-            <div class="client-info">
-                <h3>Client Information</h3>
-                <p><strong>Name:</strong> ${job.client.name}</p>
-                <p><strong>Email:</strong> ${job.client.email}</p>
-                <p><strong>Rating:</strong> ${job.client.rating.toFixed(1)} ★</p>
-                <p><strong>Member Since:</strong> ${job.client.memberSince}</p>
-                <p><strong>About:</strong> ${job.client.bio}</p>
-            </div>
+            // Add save button event
+            const saveButton = jobCard.querySelector('.save-job-button');
+            saveButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSaveJob(job.id, this);
+                
+                // If we're on the saved jobs tab, reload the list
+                if (tabId === 'saved') {
+                    loadSavedJobs();
+                }
+            });
             
-            <div class="job-skills">
-                <h3>Required Skills:</h3>
-                ${job.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                <div class="price-tag">${job.price}</div>
-                <button class="apply-button ${isApplied ? 'applied' : ''}" id="apply-button" 
-                        ${isApplied ? 'disabled' : ''}>
-                    ${isApplied ? 'Applied ✓' : 'Apply Now'}
-                </button>
-            </div>
-        `;
-        
-        // Set up apply button if not already applied
-        if (!isApplied) {
-            document.getElementById('apply-button').addEventListener('click', () => applyForJob(job.id));
+            return jobCard;
         }
-        
-        // Switch views
-        jobsView.style.display = 'none';
-        jobDetailsView.classList.add('active');
-    }
 
-    function showJobsView() {
-        jobsView.style.display = 'block';
-        jobDetailsView.classList.remove('active');
-        
-        // Refresh jobs to show applied status
-        loadJobsForTab(state.currentTab);
-    }
-
-    function applyForJob(jobId) {
-        if (!state.appliedJobs.includes(jobId)) {
-            state.appliedJobs.push(jobId);
-            localStorage.setItem('appliedJobs', JSON.stringify(state.appliedJobs));
+        function toggleSaveJob(jobId, button) {
+            const index = state.savedJobs.indexOf(jobId);
             
-            // Update UI
-            const applyButton = document.getElementById('apply-button');
-            applyButton.textContent = 'Applied ✓';
-            applyButton.classList.add('applied');
-            applyButton.disabled = true;
+            if (index === -1) {
+                state.savedJobs.push(jobId);
+                button.classList.add('saved');
+            } else {
+                state.savedJobs.splice(index, 1);
+                button.classList.remove('saved');
+            }
             
-            // Show confirmation
-            alert('Application submitted successfully!');
+            // Update localStorage
+            localStorage.setItem('savedJobs', JSON.stringify(state.savedJobs));
         }
-    }
+
+        function showJobDetails(job) {
+            state.currentJobDetails = job;
+            const isApplied = state.appliedJobs.includes(job.id);
+            const isSaved = state.savedJobs.includes(job.id);
+            
+            // Format posted date
+            const postedDate = new Date(job.postedDate);
+            const formattedDate = postedDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Populate job details
+            jobDetailsContent.innerHTML = `
+                <h2>${job.title}</h2>
+                <p class="job-client"><i class="fas fa-user-tie"></i> ${job.company}</p>
+                <p><i class="fas fa-calendar-alt"></i> Posted: ${formattedDate}</p>
+                <p class="job-description">${job.description}</p>
+                
+                <div class="client-info">
+                    <h3>Client Information</h3>
+                    <p><strong>Name:</strong> ${job.client.name}</p>
+                    <p><strong>Email:</strong> ${job.client.email}</p>
+                    <p><strong>Rating:</strong> ${job.client.rating.toFixed(1)} ★</p>
+                    <p><strong>Location:</strong> ${job.client.location}</p>
+                    <p><strong>Member Since:</strong> ${job.client.memberSince}</p>
+                    <p><strong>About:</strong> ${job.client.bio}</p>
+                </div>
+                
+                <div class="job-skills">
+                    <h3>Required Skills:</h3>
+                    ${job.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                    <div class="price-tag">${job.price}</div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button class="save-job-button ${isSaved ? 'saved' : ''}" id="details-save-button" data-job-id="${job.id}" style="font-size: 24px;">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                        <button class="apply-button ${isApplied ? 'applied' : ''}" id="apply-button" 
+                                ${isApplied ? 'disabled' : ''}>
+                            ${isApplied ? 'Applied ✓' : 'Apply Now'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Set up save button
+            document.getElementById('details-save-button').addEventListener('click', function() {
+                toggleSaveJob(job.id, this);
+            });
+            
+            // Set up apply button if not already applied
+            if (!isApplied) {
+                document.getElementById('apply-button').addEventListener('click', () => applyForJob(job.id));
+            }
+            
+            // Switch views
+            jobsView.style.display = 'none';
+            jobDetailsView.classList.add('active');
+        }
+
+        function showJobsView() {
+            jobsView.style.display = 'block';
+            jobDetailsView.classList.remove('active');
+            
+            // Refresh jobs to show applied/saved status
+            if (state.currentTab === 'saved') {
+                loadSavedJobs();
+            } else {
+                loadJobsForTab(state.currentTab);
+            }
+        }
+
+        function applyForJob(jobId) {
+            if (!state.appliedJobs.includes(jobId)) {
+                state.appliedJobs.push(jobId);
+                localStorage.setItem('appliedJobs', JSON.stringify(state.appliedJobs));
+                
+                // Update UI
+                const applyButton = document.getElementById('apply-button');
+                applyButton.textContent = 'Applied ✓';
+                applyButton.classList.add('applied');
+                applyButton.disabled = true;
+                
+                // Show confirmation
+                alert('Application submitted successfully!');
+            }
+        }
     </script>
-
-
 </body>
 
 </html>

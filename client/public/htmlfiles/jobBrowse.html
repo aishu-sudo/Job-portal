@@ -1,9 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal - Browse Jobs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Global Styles */
         
@@ -188,6 +190,7 @@
             border-radius: 4px;
             text-decoration: none;
             transition: background-color 0.3s;
+            cursor: pointer;
         }
         
         .apply-button:hover {
@@ -215,6 +218,7 @@
             margin: 0 4px;
             border-radius: 4px;
             transition: background-color 0.3s;
+            cursor: pointer;
         }
         
         .pagination a.active {
@@ -225,6 +229,51 @@
         
         .pagination a:hover:not(.active) {
             background-color: #ddd;
+        }
+        /* Saved Jobs Indicator */
+        
+        .saved-jobs-count {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        /* Modal Styles */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
         }
         /* Responsive Design */
         
@@ -242,8 +291,6 @@
             }
         }
     </style>
-
-
 </head>
 
 <body>
@@ -256,18 +303,18 @@
                     <li><a href="#" class="active">Browse Jobs</a></li>
                     <li><a href="#">Companies</a></li>
                     <li><a href="#">Dashboard</a></li>
+                    <li><a href="#" id="saved-jobs-link">Saved Jobs <span id="saved-jobs-count" class="saved-jobs-count">0</span></a></li>
                     <li><a href="#">Login/Register</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-
     <section class="search-section">
         <div class="container">
-            <form class="search-form">
-                <input type="text" class="search-input" placeholder="Job title, keywords, or company">
-                <input type="text" class="search-input" placeholder="Location">
+            <form class="search-form" id="job-search-form">
+                <input type="text" class="search-input" id="job-title-input" placeholder="Job title, keywords, or company">
+                <input type="text" class="search-input" id="location-input" placeholder="Location">
                 <button type="submit" class="search-button">Search Jobs</button>
             </form>
         </div>
@@ -277,175 +324,502 @@
         <div class="filters">
             <div class="filter-group">
                 <span class="filter-label">Filter by:</span>
-                <select class="filter-select">
-                <option>All Jobs</option>
-                <option>Full-time</option>
-                <option>Part-time</option>
-                <option>Remote</option>
-                <option>Contract</option>
-            </select>
+                <select class="filter-select" id="job-type-filter">
+                    <option value="all">All Jobs</option>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="remote">Remote</option>
+                    <option value="contract">Contract</option>
+                </select>
             </div>
 
             <div class="filter-group">
                 <span class="filter-label">Sort by:</span>
-                <select class="filter-select">
-                <option>Most Recent</option>
-                <option>Highest Salary</option>
-                <option>Most Applied</option>
-            </select>
+                <select class="filter-select" id="sort-by">
+                    <option value="recent">Most Recent</option>
+                    <option value="salary">Highest Salary</option>
+                    <option value="applied">Most Applied</option>
+                </select>
             </div>
         </div>
 
-        <div class="job-listings">
-            <!-- Job Card 1 -->
-            <div class="job-card">
-                <h3 class="job-title">Frontend Developer</h3>
-                <p class="job-company">Tech Solutions Inc.</p>
-
-                <p class="job-location">
-                    <i class="fas fa-map-marker-alt"></i> San Francisco, CA (Remote)
-                </p>
-                <p class="job-salary">
-                    <i class="fas fa-dollar-sign"></i> $90,000 - $120,000 per year
-                </p>
-                <p class="job-type">
-                    <i class="fas fa-briefcase"></i> Full-time
-                </p>
-
-                <p class="job-description">
-                    We're looking for a skilled Frontend Developer with experience in React.js to join our growing team. You'll work on building responsive user interfaces for our SaaS platform.
-                </p>
-
-                <a href="#" class="apply-button">Apply Now</a>
-                <p class="job-posted">Posted 2 days ago</p>
-            </div>
-
-            <!-- Job Card 2 -->
-            <div class="job-card">
-                <h3 class="job-title">UX/UI Designer</h3>
-                <p class="job-company">Creative Minds LLC</p>
-
-                <p class="job-location">
-                    <i class="fas fa-map-marker-alt"></i> New York, NY
-                </p>
-                <p class="job-salary">
-                    <i class="fas fa-dollar-sign"></i> $80,000 - $100,000 per year
-                </p>
-                <p class="job-type">
-                    <i class="fas fa-briefcase"></i> Full-time
-                </p>
-
-                <p class="job-description">
-                    Join our design team to create beautiful, intuitive interfaces for web and mobile applications. Must have portfolio demonstrating UX process and visual design skills.
-                </p>
-
-                <a href="#" class="apply-button">Apply Now</a>
-                <p class="job-posted">Posted 1 week ago</p>
-            </div>
-
-            <!-- Job Card 3 -->
-            <div class="job-card">
-                <h3 class="job-title">Backend Engineer</h3>
-                <p class="job-company">DataSystems Corp</p>
-
-                <p class="job-location">
-                    <i class="fas fa-map-marker-alt"></i> Austin, TX (Hybrid)
-                </p>
-                <p class="job-salary">
-                    <i class="fas fa-dollar-sign"></i> $110,000 - $140,000 per year
-                </p>
-                <p class="job-type">
-                    <i class="fas fa-briefcase"></i> Full-time
-                </p>
-
-                <p class="job-description">
-                    Seeking experienced Backend Engineer proficient in Node.js and Python to develop and maintain our API services and database architecture.
-                </p>
-
-                <a href="#" class="apply-button">Apply Now</a>
-                <p class="job-posted">Posted 3 days ago</p>
-            </div>
-
-            <!-- Job Card 4 -->
-            <div class="job-card">
-                <h3 class="job-title">Marketing Specialist</h3>
-                <p class="job-company">Growth Marketing Co.</p>
-
-                <p class="job-location">
-                    <i class="fas fa-map-marker-alt"></i> Chicago, IL
-                </p>
-                <p class="job-salary">
-                    <i class="fas fa-dollar-sign"></i> $60,000 - $75,000 per year
-                </p>
-                <p class="job-type">
-                    <i class="fas fa-briefcase"></i> Full-time
-                </p>
-
-                <p class="job-description">
-                    Looking for a creative Marketing Specialist to develop and execute digital marketing campaigns across various channels including social media and email.
-                </p>
-
-                <a href="#" class="apply-button">Apply Now</a>
-                <p class="job-posted">Posted 5 days ago</p>
-            </div>
-
-            <!-- Job Card 5 -->
-            <div class="job-card">
-                <h3 class="job-title">DevOps Engineer</h3>
-                <p class="job-company">CloudTech Solutions</p>
-
-                <p class="job-location">
-                    <i class="fas fa-map-marker-alt"></i> Remote
-                </p>
-                <p class="job-salary">
-                    <i class="fas fa-dollar-sign"></i> $120,000 - $150,000 per year
-                </p>
-                <p class="job-type">
-                    <i class="fas fa-briefcase"></i> Contract
-                </p>
-
-                <p class="job-description">
-                    Contract position for DevOps Engineer with AWS, Kubernetes, and CI/CD pipeline experience to help migrate our infrastructure to the cloud.
-                </p>
-
-                <a href="#" class="apply-button">Apply Now</a>
-                <p class="job-posted">Posted 1 day ago</p>
-            </div>
-
-            <!-- Job Card 6 -->
-            <div class="job-card">
-                <h3 class="job-title">Data Scientist</h3>
-                <p class="job-company">Analytics Ventures</p>
-
-                <p class="job-location">
-                    <i class="fas fa-map-marker-alt"></i> Boston, MA
-                </p>
-                <p class="job-salary">
-                    <i class="fas fa-dollar-sign"></i> $100,000 - $130,000 per year
-                </p>
-                <p class="job-type">
-                    <i class="fas fa-briefcase"></i> Full-time
-                </p>
-
-                <p class="job-description">
-                    Join our data team to develop machine learning models and analyze large datasets to drive business decisions. Python and SQL expertise required.
-                </p>
-
-                <a href="#" class="apply-button">Apply Now</a>
-                <p class="job-posted">Posted 2 weeks ago</p>
-            </div>
+        <div class="job-listings" id="job-listings-container">
+            <!-- Job listings will be dynamically inserted here -->
         </div>
 
-        <div class="pagination">
-            <a href="#">&laquo;</a>
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">&raquo;</a>
+        <div class="pagination" id="pagination">
+            <a href="#" class="page-nav" data-page="prev">&laquo;</a>
+            <!-- Page numbers will be dynamically inserted here -->
+            <a href="#" class="page-nav" data-page="next">&raquo;</a>
         </div>
     </main>
+
+    <!-- Apply Modal -->
+    <div id="apply-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-job-title">Apply for Job</h2>
+            <p id="modal-job-company"></p>
+            <form id="application-form">
+                <div style="margin: 15px 0;">
+                    <label for="applicant-name">Full Name</label>
+                    <input type="text" id="applicant-name" style="width: 100%; padding: 8px; margin-top: 5px;" required>
+                </div>
+                <div style="margin: 15px 0;">
+                    <label for="applicant-email">Email</label>
+                    <input type="email" id="applicant-email" style="width: 100%; padding: 8px; margin-top: 5px;" required>
+                </div>
+                <div style="margin: 15px 0;">
+                    <label for="applicant-resume">Resume (URL)</label>
+                    <input type="url" id="applicant-resume" style="width: 100%; padding: 8px; margin-top: 5px;" required>
+                </div>
+                <div style="margin: 15px 0;">
+                    <label for="applicant-cover-letter">Cover Letter</label>
+                    <textarea id="applicant-cover-letter" style="width: 100%; padding: 8px; margin-top: 5px; min-height: 100px;"></textarea>
+                </div>
+                <button type="submit" class="apply-button">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Saved Jobs Modal -->
+    <div id="saved-jobs-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Your Saved Jobs</h2>
+            <div id="saved-jobs-list">
+                <!-- Saved jobs will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <!-- Footer content would go here -->
+    </footer>
+
+    <script>
+        // Job data
+        const jobs = [{
+            id: 1,
+            title: "Frontend Developer",
+            company: "Tech Solutions Inc.",
+            location: "San Francisco, CA (Remote)",
+            salary: "$90,000 - $120,000 per year",
+            type: "full-time",
+            description: "We're looking for a skilled Frontend Developer with experience in React.js to join our growing team. You'll work on building responsive user interfaces for our SaaS platform.",
+            posted: "2 days ago",
+            postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+            salaryMin: 90000,
+            salaryMax: 120000,
+            applications: 24
+        }, {
+            id: 2,
+            title: "UX/UI Designer",
+            company: "Creative Minds LLC",
+            location: "New York, NY",
+            salary: "$80,000 - $100,000 per year",
+            type: "full-time",
+            description: "Join our design team to create beautiful, intuitive interfaces for web and mobile applications. Must have portfolio demonstrating UX process and visual design skills.",
+            posted: "1 week ago",
+            postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            salaryMin: 80000,
+            salaryMax: 100000,
+            applications: 18
+        }, {
+            id: 3,
+            title: "Backend Engineer",
+            company: "DataSystems Corp",
+            location: "Austin, TX (Hybrid)",
+            salary: "$110,000 - $140,000 per year",
+            type: "full-time",
+            description: "Seeking experienced Backend Engineer proficient in Node.js and Python to develop and maintain our API services and database architecture.",
+            posted: "3 days ago",
+            postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+            salaryMin: 110000,
+            salaryMax: 140000,
+            applications: 32
+        }, {
+            id: 4,
+            title: "Marketing Specialist",
+            company: "Growth Marketing Co.",
+            location: "Chicago, IL",
+            salary: "$60,000 - $75,000 per year",
+            type: "full-time",
+            description: "Looking for a creative Marketing Specialist to develop and execute digital marketing campaigns across various channels including social media and email.",
+            posted: "5 days ago",
+            postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+            salaryMin: 60000,
+            salaryMax: 75000,
+            applications: 12
+        }, {
+            id: 5,
+            title: "DevOps Engineer",
+            company: "CloudTech Solutions",
+            location: "Remote",
+            salary: "$120,000 - $150,000 per year",
+            type: "contract",
+            description: "Contract position for DevOps Engineer with AWS, Kubernetes, and CI/CD pipeline experience to help migrate our infrastructure to the cloud.",
+            posted: "1 day ago",
+            postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+            salaryMin: 120000,
+            salaryMax: 150000,
+            applications: 8
+        }, {
+            id: 6,
+            title: "Data Scientist",
+            company: "Analytics Ventures",
+            location: "Boston, MA",
+            salary: "$100,000 - $130,000 per year",
+            type: "full-time",
+            description: "Join our data team to develop machine learning models and analyze large datasets to drive business decisions. Python and SQL expertise required.",
+            posted: "2 weeks ago",
+            postedDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+            salaryMin: 100000,
+            salaryMax: 130000,
+            applications: 45
+        }, {
+            id: 7,
+            title: "Product Manager",
+            company: "InnovateTech",
+            location: "Seattle, WA (Hybrid)",
+            salary: "$95,000 - $125,000 per year",
+            type: "full-time",
+            description: "Lead product development from conception to launch. Work with cross-functional teams to deliver exceptional user experiences.",
+            posted: "4 days ago",
+            postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+            salaryMin: 95000,
+            salaryMax: 125000,
+            applications: 22
+        }, {
+            id: 8,
+            title: "Content Writer",
+            company: "Digital Media Group",
+            location: "Remote",
+            salary: "$50,000 - $65,000 per year",
+            type: "part-time",
+            description: "Create engaging content for our digital platforms. Must have excellent writing skills and ability to adapt tone for different audiences.",
+            posted: "3 days ago",
+            postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+            salaryMin: 50000,
+            salaryMax: 65000,
+            applications: 15
+        }];
+
+        // DOM elements
+        const jobListingsContainer = document.getElementById('job-listings-container');
+        const jobSearchForm = document.getElementById('job-search-form');
+        const jobTitleInput = document.getElementById('job-title-input');
+        const locationInput = document.getElementById('location-input');
+        const jobTypeFilter = document.getElementById('job-type-filter');
+        const sortBy = document.getElementById('sort-by');
+        const pagination = document.getElementById('pagination');
+        const savedJobsCount = document.getElementById('saved-jobs-count');
+        const savedJobsLink = document.getElementById('saved-jobs-link');
+        const savedJobsModal = document.getElementById('saved-jobs-modal');
+        const savedJobsList = document.getElementById('saved-jobs-list');
+        const applyModal = document.getElementById('apply-modal');
+        const modalJobTitle = document.getElementById('modal-job-title');
+        const modalJobCompany = document.getElementById('modal-job-company');
+        const applicationForm = document.getElementById('application-form');
+
+        // State
+        let currentPage = 1;
+        const jobsPerPage = 6;
+        let savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
+        let filteredJobs = [...jobs];
+        let currentJobApplying = null;
+
+        // Initialize
+        updateSavedJobsCount();
+        renderJobListings();
+        renderPagination();
+
+        // Event listeners
+        jobSearchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            filterJobs();
+        });
+
+        jobTypeFilter.addEventListener('change', filterJobs);
+        sortBy.addEventListener('change', filterJobs);
+
+        pagination.addEventListener('click', function(e) {
+            if (e.target.classList.contains('page-nav')) {
+                e.preventDefault();
+                const action = e.target.getAttribute('data-page');
+                if (action === 'prev' && currentPage > 1) {
+                    currentPage--;
+                } else if (action === 'next' && currentPage < Math.ceil(filteredJobs.length / jobsPerPage)) {
+                    currentPage++;
+                }
+                renderJobListings();
+                renderPagination();
+            } else if (e.target.classList.contains('page-number')) {
+                e.preventDefault();
+                currentPage = parseInt(e.target.getAttribute('data-page'));
+                renderJobListings();
+                renderPagination();
+            }
+        });
+
+        savedJobsLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showSavedJobsModal();
+        });
+
+        // Modal close buttons
+        document.querySelectorAll('.close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // Functions
+        function filterJobs() {
+            const titleSearch = jobTitleInput.value.toLowerCase();
+            const locationSearch = locationInput.value.toLowerCase();
+            const jobType = jobTypeFilter.value;
+            const sortOption = sortBy.value;
+
+            filteredJobs = jobs.filter(job => {
+                const matchesTitle = job.title.toLowerCase().includes(titleSearch) ||
+                    job.company.toLowerCase().includes(titleSearch);
+                const matchesLocation = job.location.toLowerCase().includes(locationSearch);
+                const matchesType = jobType === 'all' || job.type === jobType;
+
+                return matchesTitle && matchesLocation && matchesType;
+            });
+
+            // Sort jobs
+            switch (sortOption) {
+                case 'recent':
+                    filteredJobs.sort((a, b) => b.postedDate - a.postedDate);
+                    break;
+                case 'salary':
+                    filteredJobs.sort((a, b) => b.salaryMax - a.salaryMax);
+                    break;
+                case 'applied':
+                    filteredJobs.sort((a, b) => b.applications - a.applications);
+                    break;
+            }
+
+            currentPage = 1;
+            renderJobListings();
+            renderPagination();
+        }
+
+        function renderJobListings() {
+            const startIndex = (currentPage - 1) * jobsPerPage;
+            const endIndex = startIndex + jobsPerPage;
+            const jobsToDisplay = filteredJobs.slice(startIndex, endIndex);
+
+            jobListingsContainer.innerHTML = '';
+
+            if (jobsToDisplay.length === 0) {
+                jobListingsContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">No jobs found matching your criteria.</p>';
+                return;
+            }
+
+            jobsToDisplay.forEach(job => {
+                const isSaved = savedJobs.includes(job.id);
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <h3 class="job-title">${job.title}</h3>
+                    <p class="job-company">${job.company}</p>
+                    <p class="job-location">
+                        <i class="fas fa-map-marker-alt"></i> ${job.location}
+                    </p>
+                    <p class="job-salary">
+                        <i class="fas fa-dollar-sign"></i> ${job.salary}
+                    </p>
+                    <p class="job-type">
+                        <i class="fas fa-briefcase"></i> ${job.type.charAt(0).toUpperCase() + job.type.slice(1).replace('-', ' ')}
+                    </p>
+                    <p class="job-description">${job.description}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <button class="apply-button" data-job-id="${job.id}">Apply Now</button>
+                        <button class="save-job-button" style="background: none; border: none; cursor: pointer; font-size: 20px; color: ${isSaved ? '#e74c3c' : '#95a5a6'}" data-job-id="${job.id}">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <p class="job-posted">Posted ${job.posted}</p>
+                `;
+                jobListingsContainer.appendChild(jobCard);
+            });
+
+            // Add event listeners to the new buttons
+            document.querySelectorAll('.apply-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const jobId = parseInt(this.getAttribute('data-job-id'));
+                    showApplyModal(jobId);
+                });
+            });
+
+            document.querySelectorAll('.save-job-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const jobId = parseInt(this.getAttribute('data-job-id'));
+                    toggleSaveJob(jobId, this);
+                });
+            });
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+            const paginationContainer = document.getElementById('pagination');
+
+            // Clear existing page numbers (keep prev/next buttons)
+            const existingLinks = Array.from(paginationContainer.children);
+            existingLinks.forEach(link => {
+                if (!link.classList.contains('page-nav')) {
+                    paginationContainer.removeChild(link);
+                }
+            });
+
+            // Find the prev and next buttons
+            const prevLink = document.querySelector('.page-nav[data-page="prev"]');
+            const nextLink = document.querySelector('.page-nav[data-page="next"]');
+
+            // Insert page numbers before the next button
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLink = document.createElement('a');
+                pageLink.href = '#';
+                pageLink.className = `page-number ${i === currentPage ? 'active' : ''}`;
+                pageLink.textContent = i;
+                pageLink.setAttribute('data-page', i);
+                paginationContainer.insertBefore(pageLink, nextLink);
+            }
+
+            // Disable prev/next buttons when appropriate
+            prevLink.style.display = currentPage === 1 ? 'none' : '';
+            nextLink.style.display = currentPage === totalPages || totalPages === 0 ? 'none' : '';
+        }
+
+        function toggleSaveJob(jobId, button) {
+            const index = savedJobs.indexOf(jobId);
+            const heartIcon = button.querySelector('i');
+
+            if (index === -1) {
+                savedJobs.push(jobId);
+                heartIcon.style.color = '#e74c3c';
+            } else {
+                savedJobs.splice(index, 1);
+                heartIcon.style.color = '#95a5a6';
+            }
+
+            localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+            updateSavedJobsCount();
+        }
+
+        function updateSavedJobsCount() {
+            savedJobsCount.textContent = savedJobs.length;
+        }
+
+        function showSavedJobsModal() {
+            savedJobsList.innerHTML = '';
+
+            if (savedJobs.length === 0) {
+                savedJobsList.innerHTML = '<p>You have no saved jobs.</p>';
+                savedJobsModal.style.display = 'block';
+                return;
+            }
+
+            const savedJobsData = jobs.filter(job => savedJobs.includes(job.id));
+
+            savedJobsData.forEach(job => {
+                const jobElement = document.createElement('div');
+                jobElement.className = 'job-card';
+                jobElement.style.marginBottom = '15px';
+                jobElement.innerHTML = `
+                    <h3 class="job-title">${job.title}</h3>
+                    <p class="job-company">${job.company}</p>
+                    <p class="job-location">
+                        <i class="fas fa-map-marker-alt"></i> ${job.location}
+                    </p>
+                    <p class="job-salary">
+                        <i class="fas fa-dollar-sign"></i> ${job.salary}
+                    </p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <button class="apply-button" data-job-id="${job.id}" style="margin-right: 10px;">Apply Now</button>
+                        <button class="remove-saved-job" data-job-id="${job.id}" style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
+                            Remove
+                        </button>
+                    </div>
+                `;
+                savedJobsList.appendChild(jobElement);
+            });
+
+            // Add event listeners to the buttons in the modal
+            document.querySelectorAll('.apply-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const jobId = parseInt(this.getAttribute('data-job-id'));
+                    savedJobsModal.style.display = 'none';
+                    showApplyModal(jobId);
+                });
+            });
+
+            document.querySelectorAll('.remove-saved-job').forEach(button => {
+                button.addEventListener('click', function() {
+                    const jobId = parseInt(this.getAttribute('data-job-id'));
+                    const index = savedJobs.indexOf(jobId);
+                    if (index !== -1) {
+                        savedJobs.splice(index, 1);
+                        localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+                        updateSavedJobsCount();
+                        showSavedJobsModal();
+                        // Also update the heart icon in the main listings if visible
+                        const heartIcon = document.querySelector(`.save-job-button[data-job-id="${jobId}"] i`);
+                        if (heartIcon) {
+                            heartIcon.style.color = '#95a5a6';
+                        }
+                    }
+                });
+            });
+
+            savedJobsModal.style.display = 'block';
+        }
+
+        function showApplyModal(jobId) {
+            const job = jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            currentJobApplying = jobId;
+            modalJobTitle.textContent = `Apply for ${job.title}`;
+            modalJobCompany.textContent = job.company;
+            applyModal.style.display = 'block';
+        }
+
+        // Application form submission
+        applicationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('applicant-name').value;
+            const email = document.getElementById('applicant-email').value;
+            const resume = document.getElementById('applicant-resume').value;
+            const coverLetter = document.getElementById('applicant-cover-letter').value;
+
+            // In a real app, you would send this data to your server
+            console.log('Application submitted:', {
+                jobId: currentJobApplying,
+                name,
+                email,
+                resume,
+                coverLetter
+            });
+
+            // Show success message
+            alert('Application submitted successfully!');
+            applyModal.style.display = 'none';
+            applicationForm.reset();
+        });
+    </script>
 </body>
 
 </html>

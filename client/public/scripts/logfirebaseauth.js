@@ -60,11 +60,20 @@ if (loginForm) {
             showMessage("✅ Login successful! Redirecting...", "success");
 
             setTimeout(() => {
-                if (role === "client") window.location.href = "clientDashboard.html";
-                else if (role === "freelancer") window.location.href = "freelancerDashboard.html";
-                else window.location.href = "dashboard.html";
+                if (role === "client") {
+                    console.log("Redirecting to client dashboard...");
+                    window.location.href = "clientDashboard.html";
+                } else if (role === "freelancer") {
+                    console.log("Redirecting to freelancer dashboard...");
+                    window.location.href = "freelancerDashboard.html";
+                } else {
+                    console.log("Redirecting to default dashboard...");
+                    window.location.href = "dashboard.html";
+                }
             }, 1500);
+
         } catch (err) {
+            console.error("Login error:", err);
             if (err.code === "auth/wrong-password") showMessage("❌ Incorrect password!");
             else if (err.code === "auth/user-not-found") showMessage("❌ User not found!");
             else showMessage("❌ Login failed!");
