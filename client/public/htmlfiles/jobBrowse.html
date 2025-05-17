@@ -197,6 +197,15 @@
             background-color: #2980b9;
         }
         
+        .applied-badge {
+            color: #27ae60;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 10px;
+        }
+        
         .job-posted {
             font-size: 14px;
             color: #95a5a6;
@@ -275,6 +284,99 @@
         .close:hover {
             color: black;
         }
+        /* Application Form Styles */
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="url"],
+        .form-group textarea,
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        
+        .submit-application-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-application-btn:hover {
+            background-color: #2980b9;
+        }
+        /* Client Information Section */
+        
+        .client-info-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .client-info-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .client-info-item {
+            margin-bottom: 5px;
+            display: flex;
+        }
+        
+        .client-info-label {
+            font-weight: 500;
+            min-width: 120px;
+            color: #555;
+        }
+        
+        .client-info-value {
+            flex: 1;
+        }
         /* Responsive Design */
         
         @media (max-width: 768px) {
@@ -288,6 +390,12 @@
             }
             .job-listings {
                 grid-template-columns: 1fr;
+            }
+            .client-info-item {
+                flex-direction: column;
+            }
+            .client-info-label {
+                margin-bottom: 3px;
             }
         }
     </style>
@@ -354,42 +462,70 @@
         </div>
     </main>
 
-    <!-- Apply Modal -->
-    <div id="apply-modal" class="modal">
+    <!-- Application Form Modal -->
+    <div id="application-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2 id="modal-job-title">Apply for Job</h2>
-            <p id="modal-job-company"></p>
-            <form id="application-form">
-                <div style="margin: 15px 0;">
-                    <label for="applicant-name">Full Name</label>
-                    <input type="text" id="applicant-name" style="width: 100%; padding: 8px; margin-top: 5px;" required>
-                </div>
-                <div style="margin: 15px 0;">
-                    <label for="applicant-email">Email</label>
-                    <input type="email" id="applicant-email" style="width: 100%; padding: 8px; margin-top: 5px;" required>
-                </div>
-                <div style="margin: 15px 0;">
-                    <label for="applicant-resume">Resume (URL)</label>
-                    <input type="url" id="applicant-resume" style="width: 100%; padding: 8px; margin-top: 5px;" required>
-                </div>
-                <div style="margin: 15px 0;">
-                    <label for="applicant-cover-letter">Cover Letter</label>
-                    <textarea id="applicant-cover-letter" style="width: 100%; padding: 8px; margin-top: 5px; min-height: 100px;"></textarea>
-                </div>
-                <button type="submit" class="apply-button">Submit Application</button>
-            </form>
-        </div>
-    </div>
+            <h2>Apply for <span id="modal-job-title"></span></h2>
+            <p>at <span id="modal-company-name"></span></p>
 
-    <!-- Saved Jobs Modal -->
-    <div id="saved-jobs-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Your Saved Jobs</h2>
-            <div id="saved-jobs-list">
-                <!-- Saved jobs will be dynamically inserted here -->
+            <!-- Client Information Section -->
+            <div class="client-info-section">
+                <div class="client-info-title">Hiring Information</div>
+                <div class="client-info-item">
+                    <span class="client-info-label">Contact Person:</span>
+                    <span class="client-info-value" id="client-contact-person"></span>
+                </div>
+                <div class="client-info-item">
+                    <span class="client-info-label">Contact Email:</span>
+                    <span class="client-info-value" id="client-email"></span>
+                </div>
+                <div class="client-info-item">
+                    <span class="client-info-label">Contact Phone:</span>
+                    <span class="client-info-value" id="client-phone"></span>
+                </div>
+                <div class="client-info-item">
+                    <span class="client-info-label">Application Deadline:</span>
+                    <span class="client-info-value" id="application-deadline"></span>
+                </div>
+                <div class="client-info-item">
+                    <span class="client-info-label">Special Instructions:</span>
+                    <span class="client-info-value" id="client-notes"></span>
+                </div>
             </div>
+
+            <form id="job-application-form">
+                <div class="form-group">
+                    <label for="applicant-name">Full Name *</label>
+                    <input type="text" id="applicant-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicant-email">Email *</label>
+                    <input type="email" id="applicant-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicant-phone">Phone Number</label>
+                    <input type="tel" id="applicant-phone">
+                </div>
+                <div class="form-group">
+                    <label for="applicant-resume">Resume/CV *</label>
+                    <input type="file" id="applicant-resume" accept=".pdf,.doc,.docx" required>
+                    <small>Accepted formats: PDF, DOC, DOCX (Max 5MB)</small>
+                </div>
+                <div class="form-group">
+                    <label for="applicant-portfolio">Portfolio/Website</label>
+                    <input type="url" id="applicant-portfolio" placeholder="https://">
+                </div>
+                <div class="form-group">
+                    <label for="applicant-cover-letter">Cover Letter</label>
+                    <textarea id="applicant-cover-letter" rows="6" placeholder="Tell us why you're a good fit for this position..."></textarea>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree-terms" required>
+                    <label for="agree-terms">I agree to the terms and conditions *</label>
+                </div>
+                <button type="submit" class="submit-application-btn">Submit Application</button>
+            </form>
         </div>
     </div>
 
@@ -398,7 +534,7 @@
     </footer>
 
     <script>
-        // Job data
+        // Job data with client information
         const jobs = [{
             id: 1,
             title: "Frontend Developer",
@@ -411,7 +547,14 @@
             postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
             salaryMin: 90000,
             salaryMax: 120000,
-            applications: 24
+            applications: 24,
+            clientInfo: {
+                contactPerson: "Sarah Johnson (HR Manager)",
+                email: "hr@techsolutions.com",
+                phone: "(415) 555-1234",
+                deadline: "June 15, 2023",
+                notes: "Please include your GitHub profile or portfolio link in your application."
+            }
         }, {
             id: 2,
             title: "UX/UI Designer",
@@ -424,7 +567,14 @@
             postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
             salaryMin: 80000,
             salaryMax: 100000,
-            applications: 18
+            applications: 18,
+            clientInfo: {
+                contactPerson: "Michael Chen (Design Lead)",
+                email: "design@creativeminds.com",
+                phone: "(212) 555-5678",
+                deadline: "June 30, 2023",
+                notes: "Portfolio review will be the first step in our interview process."
+            }
         }, {
             id: 3,
             title: "Backend Engineer",
@@ -437,7 +587,14 @@
             postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
             salaryMin: 110000,
             salaryMax: 140000,
-            applications: 32
+            applications: 32,
+            clientInfo: {
+                contactPerson: "David Wilson (Engineering Manager)",
+                email: "engineering@datasystems.com",
+                phone: "(512) 555-9012",
+                deadline: "July 10, 2023",
+                notes: "Experience with cloud infrastructure (AWS/Azure) is a plus. Please highlight relevant experience in your cover letter."
+            }
         }, {
             id: 4,
             title: "Marketing Specialist",
@@ -450,7 +607,14 @@
             postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
             salaryMin: 60000,
             salaryMax: 75000,
-            applications: 12
+            applications: 12,
+            clientInfo: {
+                contactPerson: "Emily Rodriguez (Marketing Director)",
+                email: "marketing@growthmarketing.com",
+                phone: "(312) 555-3456",
+                deadline: "June 25, 2023",
+                notes: "Include examples of successful campaigns you've worked on. Case studies are preferred."
+            }
         }, {
             id: 5,
             title: "DevOps Engineer",
@@ -463,7 +627,14 @@
             postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
             salaryMin: 120000,
             salaryMax: 150000,
-            applications: 8
+            applications: 8,
+            clientInfo: {
+                contactPerson: "Robert Taylor (CTO)",
+                email: "tech@cloudtechsolutions.com",
+                phone: "(800) 555-7890",
+                deadline: "July 5, 2023",
+                notes: "6-month contract with possibility of extension. Please indicate your availability in your application."
+            }
         }, {
             id: 6,
             title: "Data Scientist",
@@ -476,7 +647,14 @@
             postedDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
             salaryMin: 100000,
             salaryMax: 130000,
-            applications: 45
+            applications: 45,
+            clientInfo: {
+                contactPerson: "Dr. James Peterson (Head of Data Science)",
+                email: "datascience@analyticsventures.com",
+                phone: "(617) 555-2345",
+                deadline: "June 20, 2023",
+                notes: "PhD in quantitative field preferred but not required. Please include links to any published research."
+            }
         }, {
             id: 7,
             title: "Product Manager",
@@ -489,7 +667,14 @@
             postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
             salaryMin: 95000,
             salaryMax: 125000,
-            applications: 22
+            applications: 22,
+            clientInfo: {
+                contactPerson: "Lisa Wong (VP of Product)",
+                email: "product@innovatetech.com",
+                phone: "(206) 555-6789",
+                deadline: "July 15, 2023",
+                notes: "Experience with Agile methodologies required. Please describe your approach to product development in your cover letter."
+            }
         }, {
             id: 8,
             title: "Content Writer",
@@ -502,7 +687,94 @@
             postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
             salaryMin: 50000,
             salaryMax: 65000,
-            applications: 15
+            applications: 15,
+            clientInfo: {
+                contactPerson: "Thomas Bennett (Editorial Director)",
+                email: "editorial@digitalmediagroup.com",
+                phone: "(555) 555-1234",
+                deadline: "Ongoing",
+                notes: "Please submit 3 writing samples with your application. Include both long-form and short-form examples if possible."
+            }
+        }, {
+            id: 9,
+            title: "Senior Software Engineer",
+            company: "CodeCraft Inc.",
+            location: "Remote",
+            salary: "$130,000 - $160,000 per year",
+            type: "full-time",
+            description: "We're seeking an experienced Senior Software Engineer to lead our core product development. You'll architect solutions and mentor junior engineers.",
+            posted: "1 day ago",
+            postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+            salaryMin: 130000,
+            salaryMax: 160000,
+            applications: 28,
+            clientInfo: {
+                contactPerson: "Daniel Kim (Engineering Director)",
+                email: "engineering@codecraft.com",
+                phone: "(888) 555-4567",
+                deadline: "July 1, 2023",
+                notes: "System design interview will be part of the process. Please be prepared to discuss your architectural decisions on past projects."
+            }
+        }, {
+            id: 10,
+            title: "Digital Marketing Manager",
+            company: "Online Growth Partners",
+            location: "Chicago, IL (Hybrid)",
+            salary: "$85,000 - $110,000 per year",
+            type: "full-time",
+            description: "Lead our digital marketing team to develop and execute comprehensive online marketing strategies across multiple channels.",
+            posted: "4 days ago",
+            postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+            salaryMin: 85000,
+            salaryMax: 110000,
+            applications: 19,
+            clientInfo: {
+                contactPerson: "Jessica Martinez (CMO)",
+                email: "marketing@onlinegrowth.com",
+                phone: "(312) 555-8901",
+                deadline: "June 28, 2023",
+                notes: "Experience with Google Ads and Facebook Ads required. Please include performance metrics from past campaigns."
+            }
+        }, {
+            id: 11,
+            title: "Cybersecurity Analyst",
+            company: "SecureNet Systems",
+            location: "Washington, DC",
+            salary: "$95,000 - $125,000 per year",
+            type: "full-time",
+            description: "Protect our systems and data by identifying vulnerabilities and implementing security measures. CISSP certification preferred.",
+            posted: "1 week ago",
+            postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            salaryMin: 95000,
+            salaryMax: 125000,
+            applications: 31,
+            clientInfo: {
+                contactPerson: "Mark Reynolds (Chief Security Officer)",
+                email: "security@securenetsystems.com",
+                phone: "(202) 555-4567",
+                deadline: "July 7, 2023",
+                notes: "Must be eligible for security clearance. Please indicate your clearance status in your application."
+            }
+        }, {
+            id: 12,
+            title: "Mobile App Developer",
+            company: "AppVenture",
+            location: "Remote",
+            salary: "$100,000 - $135,000 per year",
+            type: "contract",
+            description: "Develop cross-platform mobile applications using Flutter. Experience with Firebase and state management required.",
+            posted: "2 days ago",
+            postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+            salaryMin: 100000,
+            salaryMax: 135000,
+            applications: 14,
+            clientInfo: {
+                contactPerson: "Amanda Lee (Product Lead)",
+                email: "mobile@appventure.com",
+                phone: "(555) 555-6789",
+                deadline: "June 30, 2023",
+                notes: "Please include links to any published apps in the Apple App Store or Google Play Store."
+            }
         }];
 
         // DOM elements
@@ -515,17 +787,24 @@
         const pagination = document.getElementById('pagination');
         const savedJobsCount = document.getElementById('saved-jobs-count');
         const savedJobsLink = document.getElementById('saved-jobs-link');
-        const savedJobsModal = document.getElementById('saved-jobs-modal');
-        const savedJobsList = document.getElementById('saved-jobs-list');
-        const applyModal = document.getElementById('apply-modal');
+        const applicationModal = document.getElementById('application-modal');
         const modalJobTitle = document.getElementById('modal-job-title');
-        const modalJobCompany = document.getElementById('modal-job-company');
-        const applicationForm = document.getElementById('application-form');
+        const modalCompanyName = document.getElementById('modal-company-name');
+        const applicationForm = document.getElementById('job-application-form');
+        const closeModalBtn = document.querySelector('.close');
+
+        // Client info elements
+        const clientContactPerson = document.getElementById('client-contact-person');
+        const clientEmail = document.getElementById('client-email');
+        const clientPhone = document.getElementById('client-phone');
+        const applicationDeadline = document.getElementById('application-deadline');
+        const clientNotes = document.getElementById('client-notes');
 
         // State
         let currentPage = 1;
         const jobsPerPage = 6;
         let savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
+        let appliedJobs = JSON.parse(localStorage.getItem('appliedJobs')) || [];
         let filteredJobs = [...jobs];
         let currentJobApplying = null;
 
@@ -564,21 +843,59 @@
 
         savedJobsLink.addEventListener('click', function(e) {
             e.preventDefault();
-            showSavedJobsModal();
+            // In a real app, you might show saved jobs here
+            alert('Saved jobs feature would be implemented here');
         });
 
         // Modal close buttons
-        document.querySelectorAll('.close').forEach(closeBtn => {
-            closeBtn.addEventListener('click', function() {
-                this.closest('.modal').style.display = 'none';
-            });
+        closeModalBtn.addEventListener('click', function() {
+            applicationModal.style.display = 'none';
         });
 
         // Close modal when clicking outside
         window.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
+            if (e.target === applicationModal) {
+                applicationModal.style.display = 'none';
             }
+        });
+
+        // Application form submission
+        applicationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get form data
+            const resumeInput = document.getElementById('applicant-resume');
+            const resumeFile = resumeInput.files.length > 0 ? resumeInput.files[0].name : '';
+
+            const formData = {
+                jobId: currentJobApplying,
+                name: document.getElementById('applicant-name').value,
+                email: document.getElementById('applicant-email').value,
+                phone: document.getElementById('applicant-phone').value,
+                resume: resumeFile,
+                portfolio: document.getElementById('applicant-portfolio').value,
+                coverLetter: document.getElementById('applicant-cover-letter').value,
+                appliedDate: new Date().toISOString()
+            };
+
+            // In a real app, you would send this data to your server
+            console.log('Application submitted:', formData);
+
+            // Add to applied jobs
+            if (currentJobApplying && !appliedJobs.includes(currentJobApplying)) {
+                appliedJobs.push(currentJobApplying);
+                localStorage.setItem('appliedJobs', JSON.stringify(appliedJobs));
+            }
+
+            // Show success message
+            alert('Your application has been submitted successfully!');
+
+            // Close modal and reset form
+            applicationModal.style.display = 'none';
+            applicationForm.reset();
+
+            // Refresh the job listings to show the applied status
+            renderJobListings();
         });
 
         // Functions
@@ -629,6 +946,7 @@
 
             jobsToDisplay.forEach(job => {
                 const isSaved = savedJobs.includes(job.id);
+                const isApplied = appliedJobs.includes(job.id);
                 const jobCard = document.createElement('div');
                 jobCard.className = 'job-card';
                 jobCard.innerHTML = `
@@ -645,7 +963,12 @@
                     </p>
                     <p class="job-description">${job.description}</p>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <button class="apply-button" data-job-id="${job.id}">Apply Now</button>
+                        <div>
+                            ${isApplied ? '<span class="applied-badge"><i class="fas fa-check"></i> Applied</span>' : ''}
+                            <button class="apply-button" data-job-id="${job.id}" ${isApplied ? 'disabled style="background-color: #27ae60;"' : ''}>
+                                ${isApplied ? 'Applied' : 'Apply Now'}
+                            </button>
+                        </div>
                         <button class="save-job-button" style="background: none; border: none; cursor: pointer; font-size: 20px; color: ${isSaved ? '#e74c3c' : '#95a5a6'}" data-job-id="${job.id}">
                             <i class="fas fa-heart"></i>
                         </button>
@@ -659,14 +982,50 @@
             document.querySelectorAll('.apply-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const jobId = parseInt(this.getAttribute('data-job-id'));
-                    showApplyModal(jobId);
+                    const job = jobs.find(j => j.id === jobId);
+                    if (job) {
+                        currentJobApplying = jobId;
+                        modalJobTitle.textContent = job.title;
+                        modalCompanyName.textContent = job.company;
+
+                        // Set client information in the modal
+                        if (job.clientInfo) {
+                            clientContactPerson.textContent = job.clientInfo.contactPerson;
+                            clientEmail.textContent = job.clientInfo.email;
+                            clientPhone.textContent = job.clientInfo.phone; // Added missing semicolon
+                            applicationDeadline.textContent = job.clientInfo.deadline;
+                            clientNotes.textContent = job.clientInfo.notes;
+                        } else {
+                            // Default values if no client info is provided
+                            clientContactPerson.textContent = "Not specified";
+                            clientEmail.textContent = "Not specified";
+                            clientPhone.textContent = "Not specified";
+                            applicationDeadline.textContent = "Not specified";
+                            clientNotes.textContent = "None";
+                        }
+
+
+                        applicationModal.style.display = 'block';
+                    }
                 });
             });
 
             document.querySelectorAll('.save-job-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const jobId = parseInt(this.getAttribute('data-job-id'));
-                    toggleSaveJob(jobId, this);
+                    const heartIcon = this.querySelector('i');
+                    const index = savedJobs.indexOf(jobId);
+
+                    if (index === -1) {
+                        savedJobs.push(jobId);
+                        heartIcon.style.color = '#e74c3c';
+                    } else {
+                        savedJobs.splice(index, 1);
+                        heartIcon.style.color = '#95a5a6';
+                    }
+
+                    localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+                    updateSavedJobsCount();
                 });
             });
         }
@@ -702,123 +1061,9 @@
             nextLink.style.display = currentPage === totalPages || totalPages === 0 ? 'none' : '';
         }
 
-        function toggleSaveJob(jobId, button) {
-            const index = savedJobs.indexOf(jobId);
-            const heartIcon = button.querySelector('i');
-
-            if (index === -1) {
-                savedJobs.push(jobId);
-                heartIcon.style.color = '#e74c3c';
-            } else {
-                savedJobs.splice(index, 1);
-                heartIcon.style.color = '#95a5a6';
-            }
-
-            localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
-            updateSavedJobsCount();
-        }
-
         function updateSavedJobsCount() {
             savedJobsCount.textContent = savedJobs.length;
         }
-
-        function showSavedJobsModal() {
-            savedJobsList.innerHTML = '';
-
-            if (savedJobs.length === 0) {
-                savedJobsList.innerHTML = '<p>You have no saved jobs.</p>';
-                savedJobsModal.style.display = 'block';
-                return;
-            }
-
-            const savedJobsData = jobs.filter(job => savedJobs.includes(job.id));
-
-            savedJobsData.forEach(job => {
-                const jobElement = document.createElement('div');
-                jobElement.className = 'job-card';
-                jobElement.style.marginBottom = '15px';
-                jobElement.innerHTML = `
-                    <h3 class="job-title">${job.title}</h3>
-                    <p class="job-company">${job.company}</p>
-                    <p class="job-location">
-                        <i class="fas fa-map-marker-alt"></i> ${job.location}
-                    </p>
-                    <p class="job-salary">
-                        <i class="fas fa-dollar-sign"></i> ${job.salary}
-                    </p>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                        <button class="apply-button" data-job-id="${job.id}" style="margin-right: 10px;">Apply Now</button>
-                        <button class="remove-saved-job" data-job-id="${job.id}" style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
-                            Remove
-                        </button>
-                    </div>
-                `;
-                savedJobsList.appendChild(jobElement);
-            });
-
-            // Add event listeners to the buttons in the modal
-            document.querySelectorAll('.apply-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobId = parseInt(this.getAttribute('data-job-id'));
-                    savedJobsModal.style.display = 'none';
-                    showApplyModal(jobId);
-                });
-            });
-
-            document.querySelectorAll('.remove-saved-job').forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobId = parseInt(this.getAttribute('data-job-id'));
-                    const index = savedJobs.indexOf(jobId);
-                    if (index !== -1) {
-                        savedJobs.splice(index, 1);
-                        localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
-                        updateSavedJobsCount();
-                        showSavedJobsModal();
-                        // Also update the heart icon in the main listings if visible
-                        const heartIcon = document.querySelector(`.save-job-button[data-job-id="${jobId}"] i`);
-                        if (heartIcon) {
-                            heartIcon.style.color = '#95a5a6';
-                        }
-                    }
-                });
-            });
-
-            savedJobsModal.style.display = 'block';
-        }
-
-        function showApplyModal(jobId) {
-            const job = jobs.find(j => j.id === jobId);
-            if (!job) return;
-
-            currentJobApplying = jobId;
-            modalJobTitle.textContent = `Apply for ${job.title}`;
-            modalJobCompany.textContent = job.company;
-            applyModal.style.display = 'block';
-        }
-
-        // Application form submission
-        applicationForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('applicant-name').value;
-            const email = document.getElementById('applicant-email').value;
-            const resume = document.getElementById('applicant-resume').value;
-            const coverLetter = document.getElementById('applicant-cover-letter').value;
-
-            // In a real app, you would send this data to your server
-            console.log('Application submitted:', {
-                jobId: currentJobApplying,
-                name,
-                email,
-                resume,
-                coverLetter
-            });
-
-            // Show success message
-            alert('Application submitted successfully!');
-            applyModal.style.display = 'none';
-            applicationForm.reset();
-        });
     </script>
 </body>
 
