@@ -420,6 +420,231 @@
             margin-top: 0;
             color: #1e40af;
         }
+        /* Applicants Modal Styles */
+        
+        .applicants-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .applicants-modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-applicants-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #4a5568;
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .applicants-list {
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .applicant-card {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .applicant-card:last-child {
+            border-bottom: none;
+        }
+        
+        .applicant-info {
+            flex: 1;
+        }
+        
+        .applicant-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .applicant-proposal {
+            color: #4a5568;
+            font-size: 14px;
+        }
+        
+        .view-applicant-btn {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .view-applicant-btn:hover {
+            background-color: #4338ca;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background-color: #10b981;
+        }
+        /* Applicant Profile Modal */
+        
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .profile-modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-profile-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #4a5568;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0e7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: #4f46e5;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .profile-info h2 {
+            margin-bottom: 5px;
+        }
+        
+        .profile-rating {
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+        
+        .profile-location {
+            color: #4a5568;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-location i {
+            margin-right: 5px;
+        }
+        
+        .profile-section {
+            margin-bottom: 20px;
+        }
+        
+        .profile-section h3 {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .profile-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .profile-skill-tag {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .proposal-details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .view-applicants-btn {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            margin-left: 15px;
+        }
+        
+        .view-applicants-btn:hover {
+            background-color: #4338ca;
+        }
         
         @media (max-width: 768px) {
             .jobs-grid {
@@ -434,6 +659,22 @@
             .modal-content {
                 margin: 10% auto;
                 width: 95%;
+            }
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            .applicant-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .view-applicant-btn {
+                align-self: flex-end;
             }
         }
     </style>
@@ -572,6 +813,67 @@
         </div>
     </div>
 
+    <!-- Applicants Modal -->
+    <div id="applicants-modal" class="applicants-modal">
+        <div class="applicants-modal-content">
+            <span class="close-applicants-modal">&times;</span>
+            <div class="page-header">
+                <h1>Applicants</h1>
+            </div>
+            <div class="applicants-list" id="applicants-list">
+                <!-- Applicants will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Applicant Profile Modal -->
+    <div id="profile-modal" class="profile-modal">
+        <div class="profile-modal-content">
+            <span class="close-profile-modal">&times;</span>
+            <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar">JD</div>
+                <div class="profile-info">
+                    <h2 id="profile-name">John Doe</h2>
+                    <div class="profile-rating">
+                        <i class="fas fa-star"></i> <span id="profile-rating">4.9 (128 reviews)</span>
+                    </div>
+                    <div class="profile-location">
+                        <i class="fas fa-map-marker-alt"></i> <span id="profile-location">New York, USA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>About</h3>
+                <p id="profile-about">Full-stack developer with 5+ years of experience building web applications. Specialized in React, Node.js, and MongoDB. Passionate about creating efficient, scalable solutions.</p>
+            </div>
+
+            <div class="profile-section">
+                <h3>Skills</h3>
+                <div class="profile-skills" id="profile-skills">
+                    <span class="profile-skill-tag">React</span>
+                    <span class="profile-skill-tag">Node.js</span>
+                    <span class="profile-skill-tag">MongoDB</span>
+                    <span class="profile-skill-tag">JavaScript</span>
+                    <span class="profile-skill-tag">HTML/CSS</span>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Portfolio</h3>
+                <p id="profile-portfolio">www.johndoeportfolio.com</p>
+            </div>
+
+            <div class="proposal-details">
+                <h3>Proposal Details</h3>
+                <p><strong>Bid:</strong> <span id="proposal-bid">$500</span></p>
+                <p><strong>Estimated Time:</strong> <span id="proposal-time">2 weeks</span></p>
+                <p><strong>Cover Letter:</strong></p>
+                <p id="proposal-letter">I'll build your e-commerce site using React and Node.js with a MongoDB backend. I've completed similar projects and can deliver high-quality results within your timeframe.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         const jobsData = {
             skills: [{
@@ -590,7 +892,8 @@
                     contactPhone: '(415) 555-1234',
                     applicationDeadline: 'June 30, 2023',
                     specialInstructions: 'Please include links to 3 previous React projects in your cover letter. Portfolio review will be the first step in our interview process.'
-                }
+                },
+                applicants: []
             }, {
                 id: 'skill2',
                 title: 'Mobile App UI/UX Design',
@@ -607,7 +910,8 @@
                     contactPhone: '(212) 555-5678',
                     applicationDeadline: 'June 25, 2023',
                     specialInstructions: 'Please include a link to your portfolio with mobile app designs. Portfolio review will be the first step in our interview process.'
-                }
+                },
+                applicants: []
             }],
             languages: [{
                 id: 'lang1',
@@ -625,7 +929,8 @@
                     contactPhone: '(305) 555-7890',
                     applicationDeadline: 'June 28, 2023',
                     specialInstructions: 'Please submit a sample translation of 200-300 words (we will provide the text). Native speakers only.'
-                }
+                },
+                applicants: []
             }],
             topRated: [{
                 id: 'top1',
@@ -643,7 +948,8 @@
                     contactPhone: '(800) 555-4567',
                     applicationDeadline: 'June 30, 2023',
                     specialInstructions: 'Please describe your experience with microservices architecture. Include links to relevant projects. Daily standups at 9 AM EST required.'
-                }
+                },
+                applicants: []
             }]
         };
 
@@ -654,7 +960,8 @@
             appliedJobs: JSON.parse(localStorage.getItem('appliedJobs')) || [],
             savedJobs: JSON.parse(localStorage.getItem('savedJobs')) || [],
             currentJobDetails: null,
-            searchQuery: ''
+            searchQuery: '',
+            currentApplicant: null
         };
 
         // DOM elements
@@ -672,6 +979,21 @@
         const closeModalBtn = document.querySelector('.close');
         const clientInstructionsContainer = document.getElementById('client-instructions-container');
         const clientSpecificFields = document.getElementById('client-specific-fields');
+        const applicantsModal = document.getElementById('applicants-modal');
+        const applicantsList = document.getElementById('applicants-list');
+        const closeApplicantsModalBtn = document.querySelector('.close-applicants-modal');
+        const profileModal = document.getElementById('profile-modal');
+        const closeProfileModalBtn = document.querySelector('.close-profile-modal');
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileName = document.getElementById('profile-name');
+        const profileRating = document.getElementById('profile-rating');
+        const profileLocation = document.getElementById('profile-location');
+        const profileAbout = document.getElementById('profile-about');
+        const profileSkills = document.getElementById('profile-skills');
+        const profilePortfolio = document.getElementById('profile-portfolio');
+        const proposalBid = document.getElementById('proposal-bid');
+        const proposalTime = document.getElementById('proposal-time');
+        const proposalLetter = document.getElementById('proposal-letter');
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
@@ -687,6 +1009,8 @@
             backButton.addEventListener('click', showJobsView);
             setupSearch();
             setupApplicationModal();
+            setupApplicantsModal();
+            setupProfileModal();
         });
 
         function setupTabs() {
@@ -807,7 +1131,9 @@
                     resume: document.getElementById('applicant-resume').files.length > 0 ? document.getElementById('applicant-resume').files[0].name : '',
                     portfolio: document.getElementById('applicant-portfolio').value,
                     coverLetter: document.getElementById('applicant-cover-letter').value,
-                    clientInfo: state.currentJobDetails.clientInfo
+                    clientInfo: state.currentJobDetails.clientInfo,
+                    bid: state.currentJobDetails.price,
+                    time: '2 weeks' // This would be dynamic in a real app
                 };
 
                 // In a real application, you would send this data to your server
@@ -817,6 +1143,42 @@
                 if (state.currentJobDetails && state.currentJobDetails.id && !state.appliedJobs.includes(state.currentJobDetails.id)) {
                     state.appliedJobs.push(state.currentJobDetails.id);
                     localStorage.setItem('appliedJobs', JSON.stringify(state.appliedJobs));
+                }
+
+                // Add to applicants list for this job
+                if (state.currentJobDetails && state.currentJobDetails.id) {
+                    // Find the job in our data structure
+                    let jobFound = false;
+
+                    // Check skills jobs
+                    for (let i = 0; i < jobsData.skills.length; i++) {
+                        if (jobsData.skills[i].id === state.currentJobDetails.id) {
+                            jobsData.skills[i].applicants.push(formData);
+                            jobFound = true;
+                            break;
+                        }
+                    }
+
+                    // If not found in skills, check languages
+                    if (!jobFound) {
+                        for (let i = 0; i < jobsData.languages.length; i++) {
+                            if (jobsData.languages[i].id === state.currentJobDetails.id) {
+                                jobsData.languages[i].applicants.push(formData);
+                                jobFound = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // If still not found, check topRated
+                    if (!jobFound) {
+                        for (let i = 0; i < jobsData.topRated.length; i++) {
+                            if (jobsData.topRated[i].id === state.currentJobDetails.id) {
+                                jobsData.topRated[i].applicants.push(formData);
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 // Show success message
@@ -831,6 +1193,30 @@
                     loadSavedJobs();
                 } else {
                     loadJobsForTab(state.currentTab);
+                }
+            });
+        }
+
+        function setupApplicantsModal() {
+            // Close modal
+            closeApplicantsModalBtn.addEventListener('click', closeApplicantsModal);
+
+            // Close when clicking outside modal
+            window.addEventListener('click', (e) => {
+                if (e.target === applicantsModal) {
+                    closeApplicantsModal();
+                }
+            });
+        }
+
+        function setupProfileModal() {
+            // Close modal
+            closeProfileModalBtn.addEventListener('click', closeProfileModal);
+
+            // Close when clicking outside modal
+            window.addEventListener('click', (e) => {
+                if (e.target === profileModal) {
+                    closeProfileModal();
                 }
             });
         }
@@ -879,6 +1265,156 @@
             applicationModal.style.display = 'none';
             document.body.style.overflow = 'auto';
             applicationForm.reset();
+        }
+
+        function openApplicantsModal() {
+            if (!state.currentJobDetails) return;
+
+            // Clear previous applicants
+            applicantsList.innerHTML = '';
+
+            // Find the job in our data structure to get applicants
+            let jobApplicants = [];
+
+            // Check skills jobs
+            for (let i = 0; i < jobsData.skills.length; i++) {
+                if (jobsData.skills[i].id === state.currentJobDetails.id) {
+                    jobApplicants = jobsData.skills[i].applicants;
+                    break;
+                }
+            }
+
+            // If not found in skills, check languages
+            if (jobApplicants.length === 0) {
+                for (let i = 0; i < jobsData.languages.length; i++) {
+                    if (jobsData.languages[i].id === state.currentJobDetails.id) {
+                        jobApplicants = jobsData.languages[i].applicants;
+                        break;
+                    }
+                }
+            }
+
+            // If still not found, check topRated
+            if (jobApplicants.length === 0) {
+                for (let i = 0; i < jobsData.topRated.length; i++) {
+                    if (jobsData.topRated[i].id === state.currentJobDetails.id) {
+                        jobApplicants = jobsData.topRated[i].applicants;
+                        break;
+                    }
+                }
+            }
+
+            // Display applicants
+            if (jobApplicants.length === 0) {
+                applicantsList.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-users" style="font-size: 40px; color: #ccc; margin-bottom: 15px;"></i>
+                        <h3>No applicants yet</h3>
+                        <p>Applicants will appear here when they apply for this job</p>
+                    </div>
+                `;
+            } else {
+                jobApplicants.forEach((applicant, index) => {
+                    const applicantCard = document.createElement('div');
+                    applicantCard.className = 'applicant-card';
+                    applicantCard.innerHTML = `
+                        <div class="applicant-info">
+                            <div class="applicant-name">
+                                <span class="status-indicator"></span> ${applicant.name}
+                            </div>
+                            <div class="applicant-proposal">Proposal: "${applicant.bid}, ${applicant.time}"</div>
+                        </div>
+                        <button class="view-applicant-btn" data-applicant-index="${index}">View</button>
+                    `;
+                    applicantsList.appendChild(applicantCard);
+
+                    // Add click handler to view button
+                    const viewBtn = applicantCard.querySelector('.view-applicant-btn');
+                    viewBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        showApplicantProfile(index);
+                    });
+                });
+            }
+
+            applicantsModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeApplicantsModal() {
+            applicantsModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function showApplicantProfile(index) {
+            if (!state.currentJobDetails) return;
+
+            // Find the job in our data structure to get applicants
+            let jobApplicants = [];
+
+            // Check skills jobs
+            for (let i = 0; i < jobsData.skills.length; i++) {
+                if (jobsData.skills[i].id === state.currentJobDetails.id) {
+                    jobApplicants = jobsData.skills[i].applicants;
+                    break;
+                }
+            }
+
+            // If not found in skills, check languages
+            if (jobApplicants.length === 0) {
+                for (let i = 0; i < jobsData.languages.length; i++) {
+                    if (jobsData.languages[i].id === state.currentJobDetails.id) {
+                        jobApplicants = jobsData.languages[i].applicants;
+                        break;
+                    }
+                }
+            }
+
+            // If still not found, check topRated
+            if (jobApplicants.length === 0) {
+                for (let i = 0; i < jobsData.topRated.length; i++) {
+                    if (jobsData.topRated[i].id === state.currentJobDetails.id) {
+                        jobApplicants = jobsData.topRated[i].applicants;
+                        break;
+                    }
+                }
+            }
+
+            // Get the specific applicant
+            const applicant = jobApplicants[index];
+            if (!applicant) return;
+
+            // Update profile modal with applicant data
+            profileAvatar.textContent = applicant.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            profileName.textContent = applicant.name;
+            profileRating.textContent = "4.5 (25 reviews)"; // This would come from applicant data in a real app
+            profileLocation.textContent = "Location not specified"; // This would come from applicant data in a real app
+            profileAbout.textContent = applicant.coverLetter || "No additional information provided.";
+            profilePortfolio.textContent = applicant.portfolio || "No portfolio provided";
+
+            // Update skills (in a real app, this would come from applicant data)
+            profileSkills.innerHTML = '';
+            const skills = ['React', 'Node.js', 'JavaScript', 'HTML/CSS']; // Default skills for demo
+            skills.forEach(skill => {
+                const skillTag = document.createElement('span');
+                skillTag.className = 'profile-skill-tag';
+                skillTag.textContent = skill;
+                profileSkills.appendChild(skillTag);
+            });
+
+            // Update proposal details
+            proposalBid.textContent = applicant.bid;
+            proposalTime.textContent = applicant.time;
+            proposalLetter.textContent = applicant.coverLetter || "No cover letter provided.";
+
+            // Close applicants modal and open profile modal
+            closeApplicantsModal();
+            profileModal.style.display = 'flex';
+        }
+
+        function closeProfileModal() {
+            profileModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         function loadJobsForTab(tabId) {
@@ -1116,6 +1652,9 @@
                         <button class="save-job-button ${isSaved ? 'saved' : ''}" id="details-save-button" data-job-id="${job.id}" style="font-size: 24px;">
                             <i class="fas fa-bookmark"></i>
                         </button>
+                        <button class="view-applicants-btn" id="view-applicants-btn">
+                            View Applicants (${job.applicants ? job.applicants.length : 0})
+                        </button>
                         <button class="apply-button ${isApplied ? 'applied' : ''}" id="apply-button" 
                                 ${isApplied ? 'disabled' : ''}>
                             ${isApplied ? 'Applied ✓' : 'Apply Now'}
@@ -1127,6 +1666,12 @@
             // Set up save button
             document.getElementById('details-save-button').addEventListener('click', function() {
                 toggleSaveJob(job.id, this);
+            });
+            
+            // Set up view applicants button
+            document.getElementById('view-applicants-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                openApplicantsModal();
             });
             
             // Set up apply button if not already applied
