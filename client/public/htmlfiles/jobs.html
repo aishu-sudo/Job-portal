@@ -607,272 +607,638 @@
     <script>
         // Job data with client information
         // Job data with client information
+        // Job data with client information
         const jobsData = {
-            all: [
-                // ... (keep all existing jobs in the 'all' category)
-                // Only showing the new jobs for brevity, but you should keep all existing ones
-                {
-                    id: 13,
-                    title: "UI/UX Designer",
-                    company: "Digital Design Agency",
-                    location: "Remote",
-                    salary: "$85,000 - $110,000 per year",
-                    type: "full-time",
-                    description: "Design a modern website interface with a focus on user experience and responsive design principles. Create wireframes, prototypes, and high-fidelity designs.",
-                    posted: "1 day ago",
-                    postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-                    salaryMin: 85000,
-                    salaryMax: 110000,
-                    applications: 15,
-                    clientInfo: {
-                        contactPerson: "Alexandra Park (Design Director)",
-                        email: "design@digitaldesign.com",
-                        phone: "(555) 555-1234",
-                        deadline: "July 10, 2023",
-                        notes: "Please include a portfolio with at least 3 website design projects."
-                    },
-                    skills: ["UI Design", "UX Research", "Figma", "Adobe XD", "Prototyping"]
-                }, {
-                    id: 14,
-                    title: "Full Stack Developer",
-                    company: "Tech Innovators Inc.",
-                    location: "Remote",
-                    salary: "$100,000 - $130,000 per year",
-                    type: "full-time",
-                    description: "Develop a MERN stack application with React frontend and Node.js backend. Build RESTful APIs and implement database solutions with MongoDB.",
-                    posted: "2 days ago",
-                    postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-                    salaryMin: 100000,
-                    salaryMax: 130000,
-                    applications: 22,
-                    clientInfo: {
-                        contactPerson: "Michael Chen (CTO)",
-                        email: "tech@techinnovators.com",
-                        phone: "(555) 555-5678",
-                        deadline: "July 15, 2023",
-                        notes: "Experience with TypeScript is a plus. Please include links to GitHub repositories."
-                    },
-                    skills: ["React", "Node.js", "MongoDB", "Express", "JavaScript"]
-                }, {
-                    id: 15,
-                    title: "Graphic Designer",
-                    company: "Brand Visionaries",
-                    location: "New York, NY",
-                    salary: "$65,000 - $85,000 per year",
-                    type: "full-time",
-                    description: "Create a logo & branding kit including color palette, typography, and brand guidelines for various clients across different industries.",
-                    posted: "3 days ago",
-                    postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-                    salaryMin: 65000,
-                    salaryMax: 85000,
-                    applications: 17,
-                    clientInfo: {
-                        contactPerson: "Sarah Johnson (Creative Director)",
-                        email: "creative@brandvision.com",
-                        phone: "(555) 555-9012",
-                        deadline: "July 5, 2023",
-                        notes: "Submit 3 logo concepts with your application. Experience with brand guidelines preferred."
-                    },
-                    skills: ["Logo Design", "Branding", "Adobe Illustrator", "Photoshop", "Typography"]
-                }, {
-                    id: 16,
-                    title: "SEO Specialist",
-                    company: "Digital Growth Partners",
-                    location: "Remote",
-                    salary: "$70,000 - $90,000 per year",
-                    type: "full-time",
-                    description: "Optimize website for better ranking through on-page and technical SEO improvements. Conduct keyword research and implement content strategies.",
-                    posted: "4 days ago",
-                    postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-                    salaryMin: 70000,
-                    salaryMax: 90000,
-                    applications: 11,
-                    clientInfo: {
-                        contactPerson: "David Wilson (Marketing Director)",
-                        email: "marketing@digitalgrowth.com",
-                        phone: "(555) 555-3456",
-                        deadline: "July 20, 2023",
-                        notes: "Please include case studies of successful SEO campaigns you've managed."
-                    },
-                    skills: ["SEO", "Google Analytics", "Keyword Research", "On-Page SEO", "Technical SEO"]
-                }, {
-                    id: 17,
-                    title: "Marketing Expert",
-                    company: "Social Media Solutions",
-                    location: "Chicago, IL",
-                    salary: "$75,000 - $95,000 per year",
-                    type: "full-time",
-                    description: "Boost business through social media marketing campaigns and content strategy. Manage paid advertising and organic growth across platforms.",
-                    posted: "5 days ago",
-                    postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-                    salaryMin: 75000,
-                    salaryMax: 95000,
-                    applications: 14,
-                    clientInfo: {
-                        contactPerson: "Emily Rodriguez (Marketing Manager)",
-                        email: "marketing@socialmediasol.com",
-                        phone: "(555) 555-7890",
-                        deadline: "July 12, 2023",
-                        notes: "Experience with Facebook Ads Manager and Google Analytics required."
-                    },
-                    skills: ["Social Media Marketing", "Content Strategy", "Facebook Ads", "Instagram", "LinkedIn"]
-                }, {
-                    id: 18,
-                    title: "Beauty & Makeup Artist",
-                    company: "Glamour Studios",
-                    location: "Los Angeles, CA",
-                    salary: "$45 - $75 per hour",
-                    type: "part-time",
-                    description: "Enhance looks with expert makeup skills for photo shoots, special events, and bridal clients. Work with diverse skin types and tones.",
-                    posted: "1 week ago",
-                    postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-                    salaryMin: 45,
-                    salaryMax: 75,
-                    applications: 9,
-                    clientInfo: {
-                        contactPerson: "Olivia Martinez (Studio Manager)",
-                        email: "bookings@glamourstudios.com",
-                        phone: "(555) 555-2345",
-                        deadline: "Ongoing",
-                        notes: "Must have professional makeup kit. Portfolio required with application."
-                    },
-                    skills: ["Makeup Artistry", "Bridal Makeup", "Photo Shoot Makeup", "Special Effects", "Skincare"]
-                }, {
-                    id: 19,
-                    title: "Fitness Trainer",
-                    company: "Health & Wellness Center",
-                    location: "Miami, FL",
-                    salary: "$50 - $100 per hour",
-                    type: "part-time",
-                    description: "Help people stay fit and healthy with personalized training programs. Conduct one-on-one and group fitness sessions.",
-                    posted: "2 days ago",
-                    postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-                    salaryMin: 50,
-                    salaryMax: 100,
-                    applications: 7,
-                    clientInfo: {
-                        contactPerson: "Robert Johnson (Fitness Director)",
-                        email: "fitness@healthwellness.com",
-                        phone: "(555) 555-6789",
-                        deadline: "July 25, 2023",
-                        notes: "NASM or ACE certification required. Experience with special populations preferred."
-                    },
-                    skills: ["Personal Training", "Nutrition", "Weight Loss", "Strength Training", "Yoga"]
-                }, {
-                    id: 20,
-                    title: "Website Development",
-                    company: "Web Solutions Inc.",
-                    location: "Remote",
-                    salary: "$80,000 - $120,000 per year",
-                    type: "full-time",
-                    description: "Create, build, and develop your website with skilled website developers using modern technologies. Work on both frontend and backend development.",
-                    posted: "3 days ago",
-                    postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-                    salaryMin: 80000,
-                    salaryMax: 120000,
-                    applications: 19,
-                    clientInfo: {
-                        contactPerson: "Daniel Brown (Development Lead)",
-                        email: "dev@websolutions.com",
-                        phone: "(555) 555-4567",
-                        deadline: "July 30, 2023",
-                        notes: "Please include links to 3 websites you've developed in the past year."
-                    },
-                    skills: ["HTML/CSS", "JavaScript", "Responsive Design", "WordPress", "PHP"]
+            all: [{
+                id: 13,
+                title: "UI/UX Designer",
+                company: "Digital Design Agency",
+                location: "Remote",
+                salary: "$85,000 - $110,000 per year",
+                type: "full-time",
+                description: "Design a modern website interface with a focus on user experience and responsive design principles. Create wireframes, prototypes, and high-fidelity designs.",
+                posted: "1 day ago",
+                postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+                salaryMin: 85000,
+                salaryMax: 110000,
+                applications: 15,
+                clientInfo: {
+                    contactPerson: "Alexandra Park (Design Director)",
+                    email: "design@digitaldesign.com",
+                    phone: "(555) 555-1234",
+                    deadline: "July 10, 2023",
+                    notes: "Please include a portfolio with at least 3 website design projects."
+                },
+                skills: ["UI Design", "UX Research", "Figma", "Adobe XD", "Prototyping"]
+            }, {
+                id: 14,
+                title: "Full Stack Developer",
+                company: "Tech Innovators Inc.",
+                location: "Remote",
+                salary: "$100,000 - $130,000 per year",
+                type: "full-time",
+                description: "Develop a MERN stack application with React frontend and Node.js backend. Build RESTful APIs and implement database solutions with MongoDB.",
+                posted: "2 days ago",
+                postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                salaryMin: 100000,
+                salaryMax: 130000,
+                applications: 22,
+                clientInfo: {
+                    contactPerson: "Michael Chen (CTO)",
+                    email: "tech@techinnovators.com",
+                    phone: "(555) 555-5678",
+                    deadline: "July 15, 2023",
+                    notes: "Experience with TypeScript is a plus. Please include links to GitHub repositories."
+                },
+                skills: ["React", "Node.js", "MongoDB", "Express", "JavaScript"]
+            }, {
+                id: 15,
+                title: "Graphic Designer",
+                company: "Brand Visionaries",
+                location: "New York, NY",
+                salary: "$65,000 - $85,000 per year",
+                type: "full-time",
+                description: "Create a logo & branding kit including color palette, typography, and brand guidelines for various clients across different industries.",
+                posted: "3 days ago",
+                postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                salaryMin: 65000,
+                salaryMax: 85000,
+                applications: 17,
+                clientInfo: {
+                    contactPerson: "Sarah Johnson (Creative Director)",
+                    email: "creative@brandvision.com",
+                    phone: "(555) 555-9012",
+                    deadline: "July 5, 2023",
+                    notes: "Submit 3 logo concepts with your application. Experience with brand guidelines preferred."
+                },
+                skills: ["Logo Design", "Branding", "Adobe Illustrator", "Photoshop", "Typography"]
+            }, {
+                id: 16,
+                title: "SEO Specialist",
+                company: "Digital Growth Partners",
+                location: "Remote",
+                salary: "$70,000 - $90,000 per year",
+                type: "full-time",
+                description: "Optimize website for better ranking through on-page and technical SEO improvements. Conduct keyword research and implement content strategies.",
+                posted: "4 days ago",
+                postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+                salaryMin: 70000,
+                salaryMax: 90000,
+                applications: 11,
+                clientInfo: {
+                    contactPerson: "David Wilson (Marketing Director)",
+                    email: "marketing@digitalgrowth.com",
+                    phone: "(555) 555-3456",
+                    deadline: "July 20, 2023",
+                    notes: "Please include case studies of successful SEO campaigns you've managed."
+                },
+                skills: ["SEO", "Google Analytics", "Keyword Research", "On-Page SEO", "Technical SEO"]
+            }, {
+                id: 17,
+                title: "Marketing Expert",
+                company: "Social Media Solutions",
+                location: "Chicago, IL",
+                salary: "$75,000 - $95,000 per year",
+                type: "full-time",
+                description: "Boost business through social media marketing campaigns and content strategy. Manage paid advertising and organic growth across platforms.",
+                posted: "5 days ago",
+                postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+                salaryMin: 75000,
+                salaryMax: 95000,
+                applications: 14,
+                clientInfo: {
+                    contactPerson: "Emily Rodriguez (Marketing Manager)",
+                    email: "marketing@socialmediasol.com",
+                    phone: "(555) 555-7890",
+                    deadline: "July 12, 2023",
+                    notes: "Experience with Facebook Ads Manager and Google Analytics required."
+                },
+                skills: ["Social Media Marketing", "Content Strategy", "Facebook Ads", "Instagram", "LinkedIn"]
+            }, {
+                id: 18,
+                title: "Beauty & Makeup Artist",
+                company: "Glamour Studios",
+                location: "Los Angeles, CA",
+                salary: "$45 - $75 per hour",
+                type: "part-time",
+                description: "Enhance looks with expert makeup skills for photo shoots, special events, and bridal clients. Work with diverse skin types and tones.",
+                posted: "1 week ago",
+                postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+                salaryMin: 45,
+                salaryMax: 75,
+                applications: 9,
+                clientInfo: {
+                    contactPerson: "Olivia Martinez (Studio Manager)",
+                    email: "bookings@glamourstudios.com",
+                    phone: "(555) 555-2345",
+                    deadline: "Ongoing",
+                    notes: "Must have professional makeup kit. Portfolio required with application."
+                },
+                skills: ["Makeup Artistry", "Bridal Makeup", "Photo Shoot Makeup", "Special Effects", "Skincare"]
+            }, {
+                id: 19,
+                title: "Fitness Trainer",
+                company: "Health & Wellness Center",
+                location: "Miami, FL",
+                salary: "$50 - $100 per hour",
+                type: "part-time",
+                description: "Help people stay fit and healthy with personalized training programs. Conduct one-on-one and group fitness sessions.",
+                posted: "2 days ago",
+                postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                salaryMin: 50,
+                salaryMax: 100,
+                applications: 7,
+                clientInfo: {
+                    contactPerson: "Robert Johnson (Fitness Director)",
+                    email: "fitness@healthwellness.com",
+                    phone: "(555) 555-6789",
+                    deadline: "July 25, 2023",
+                    notes: "NASM or ACE certification required. Experience with special populations preferred."
+                },
+                skills: ["Personal Training", "Nutrition", "Weight Loss", "Strength Training", "Yoga"]
+            }, {
+                id: 20,
+                title: "Website Development",
+                company: "Web Solutions Inc.",
+                location: "Remote",
+                salary: "$80,000 - $120,000 per year",
+                type: "full-time",
+                description: "Create, build, and develop your website with skilled website developers using modern technologies. Work on both frontend and backend development.",
+                posted: "3 days ago",
+                postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                salaryMin: 80000,
+                salaryMax: 120000,
+                applications: 19,
+                clientInfo: {
+                    contactPerson: "Daniel Brown (Development Lead)",
+                    email: "dev@websolutions.com",
+                    phone: "(555) 555-4567",
+                    deadline: "July 30, 2023",
+                    notes: "Please include links to 3 websites you've developed in the past year."
+                },
+                skills: ["HTML/CSS", "JavaScript", "Responsive Design", "WordPress", "PHP"]
+            }],
+            skills: {
+                "Development & IT": {
+                    rating: 4.85,
+                    skillCount: 1853,
+                    jobs: [{
+                        id: 14,
+                        title: "Full Stack Developer",
+                        company: "Tech Innovators Inc.",
+                        location: "Remote",
+                        salary: "$100,000 - $130,000 per year",
+                        type: "full-time",
+                        description: "Develop a MERN stack application with React frontend and Node.js backend. Build RESTful APIs and implement database solutions with MongoDB.",
+                        posted: "2 days ago",
+                        postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                        salaryMin: 100000,
+                        salaryMax: 130000,
+                        applications: 22,
+                        clientInfo: {
+                            contactPerson: "Michael Chen (CTO)",
+                            email: "tech@techinnovators.com",
+                            phone: "(555) 555-5678",
+                            deadline: "July 15, 2023",
+                            notes: "Experience with TypeScript is a plus. Please include links to GitHub repositories."
+                        },
+                        skills: ["React", "Node.js", "MongoDB", "Express", "JavaScript"],
+                        rating: 4.9
+                    }, {
+                        id: 20,
+                        title: "Website Developer",
+                        company: "Web Solutions Inc.",
+                        location: "Remote",
+                        salary: "$80,000 - $120,000 per year",
+                        type: "full-time",
+                        description: "Create, build, and develop websites using modern technologies. Work on both frontend and backend development.",
+                        posted: "3 days ago",
+                        postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                        salaryMin: 80000,
+                        salaryMax: 120000,
+                        applications: 19,
+                        clientInfo: {
+                            contactPerson: "Daniel Brown (Development Lead)",
+                            email: "dev@websolutions.com",
+                            phone: "(555) 555-4567",
+                            deadline: "July 30, 2023",
+                            notes: "Please include links to 3 websites you've developed in the past year."
+                        },
+                        skills: ["HTML/CSS", "JavaScript", "Responsive Design", "WordPress", "PHP"],
+                        rating: 4.7
+                    }]
+                },
+                "AI Services": {
+                    rating: 4.8,
+                    skillCount: 294,
+                    jobs: [{
+                        id: 21,
+                        title: "AI Engineer",
+                        company: "Neural Networks Co.",
+                        location: "San Francisco, CA",
+                        salary: "$120,000 - $160,000 per year",
+                        type: "full-time",
+                        description: "Develop and implement AI models for natural language processing and computer vision applications.",
+                        posted: "1 day ago",
+                        postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+                        salaryMin: 120000,
+                        salaryMax: 160000,
+                        applications: 18,
+                        clientInfo: {
+                            contactPerson: "Dr. Alan Turing (Lead Scientist)",
+                            email: "ai@neuralnets.com",
+                            phone: "(555) 555-1111",
+                            deadline: "July 25, 2023",
+                            notes: "Experience with TensorFlow or PyTorch required."
+                        },
+                        skills: ["Machine Learning", "Python", "TensorFlow", "NLP", "Computer Vision"],
+                        rating: 4.8
+                    }]
+                },
+                "Design & Creative": {
+                    rating: 4.91,
+                    skillCount: 968,
+                    jobs: [{
+                        id: 13,
+                        title: "UI/UX Designer",
+                        company: "Digital Design Agency",
+                        location: "Remote",
+                        salary: "$85,000 - $110,000 per year",
+                        type: "full-time",
+                        description: "Design modern website interfaces with focus on user experience and responsive design principles.",
+                        posted: "1 day ago",
+                        postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+                        salaryMin: 85000,
+                        salaryMax: 110000,
+                        applications: 15,
+                        clientInfo: {
+                            contactPerson: "Alexandra Park (Design Director)",
+                            email: "design@digitaldesign.com",
+                            phone: "(555) 555-1234",
+                            deadline: "July 10, 2023",
+                            notes: "Please include a portfolio with at least 3 website design projects."
+                        },
+                        skills: ["UI Design", "UX Research", "Figma", "Adobe XD", "Prototyping"],
+                        rating: 4.8
+                    }, {
+                        id: 15,
+                        title: "Graphic Designer",
+                        company: "Brand Visionaries",
+                        location: "New York, NY",
+                        salary: "$65,000 - $85,000 per year",
+                        type: "full-time",
+                        description: "Create logos & branding kits including color palette, typography, and brand guidelines.",
+                        posted: "3 days ago",
+                        postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                        salaryMin: 65000,
+                        salaryMax: 85000,
+                        applications: 17,
+                        clientInfo: {
+                            contactPerson: "Sarah Johnson (Creative Director)",
+                            email: "creative@brandvision.com",
+                            phone: "(555) 555-9012",
+                            deadline: "July 5, 2023",
+                            notes: "Submit 3 logo concepts with your application."
+                        },
+                        skills: ["Logo Design", "Branding", "Adobe Illustrator", "Photoshop", "Typography"],
+                        rating: 4.7
+                    }]
+                },
+                "Sales & Marketing": {
+                    rating: 4.77,
+                    skillCount: 392,
+                    jobs: [{
+                        id: 16,
+                        title: "SEO Specialist",
+                        company: "Digital Growth Partners",
+                        location: "Remote",
+                        salary: "$70,000 - $90,000 per year",
+                        type: "full-time",
+                        description: "Optimize websites for better ranking through on-page and technical SEO improvements.",
+                        posted: "4 days ago",
+                        postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+                        salaryMin: 70000,
+                        salaryMax: 90000,
+                        applications: 11,
+                        clientInfo: {
+                            contactPerson: "David Wilson (Marketing Director)",
+                            email: "marketing@digitalgrowth.com",
+                            phone: "(555) 555-3456",
+                            deadline: "July 20, 2023",
+                            notes: "Please include case studies of successful SEO campaigns."
+                        },
+                        skills: ["SEO", "Google Analytics", "Keyword Research", "On-Page SEO", "Technical SEO"],
+                        rating: 4.6
+                    }, {
+                        id: 17,
+                        title: "Marketing Expert",
+                        company: "Social Media Solutions",
+                        location: "Chicago, IL",
+                        salary: "$75,000 - $95,000 per year",
+                        type: "full-time",
+                        description: "Boost business through social media marketing campaigns and content strategy.",
+                        posted: "5 days ago",
+                        postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+                        salaryMin: 75000,
+                        salaryMax: 95000,
+                        applications: 14,
+                        clientInfo: {
+                            contactPerson: "Emily Rodriguez (Marketing Manager)",
+                            email: "marketing@socialmediasol.com",
+                            phone: "(555) 555-7890",
+                            deadline: "July 12, 2023",
+                            notes: "Experience with Facebook Ads Manager required."
+                        },
+                        skills: ["Social Media Marketing", "Content Strategy", "Facebook Ads", "Instagram", "LinkedIn"],
+                        rating: 4.5
+                    }]
+                },
+                "Writing & Translation": {
+                    rating: 4.85,
+                    skillCount: 1876,
+                    jobs: [{
+                        id: 22,
+                        title: "Technical Writer",
+                        company: "Documentation Pros",
+                        location: "Remote",
+                        salary: "$60,000 - $85,000 per year",
+                        type: "full-time",
+                        description: "Create clear and concise technical documentation for software products and APIs.",
+                        posted: "2 days ago",
+                        postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                        salaryMin: 60000,
+                        salaryMax: 85000,
+                        applications: 12,
+                        clientInfo: {
+                            contactPerson: "William Shakespeare (Content Lead)",
+                            email: "writing@docpros.com",
+                            phone: "(555) 555-2222",
+                            deadline: "July 18, 2023",
+                            notes: "Samples of previous technical writing required."
+                        },
+                        skills: ["Technical Writing", "API Documentation", "Markdown", "Git", "Content Strategy"],
+                        rating: 4.8
+                    }]
+                },
+                "Admin & Customer Services": {
+                    rating: 4.8,
+                    skillCount: 450,
+                    jobs: [{
+                        id: 23,
+                        title: "Customer Support Specialist",
+                        company: "Helpful Solutions",
+                        location: "Austin, TX",
+                        salary: "$45,000 - $60,000 per year",
+                        type: "full-time",
+                        description: "Provide exceptional customer service and technical support via phone, email, and chat.",
+                        posted: "1 week ago",
+                        postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+                        salaryMin: 45000,
+                        salaryMax: 60000,
+                        applications: 21,
+                        clientInfo: {
+                            contactPerson: "Susan Smith (Support Manager)",
+                            email: "support@helpful.com",
+                            phone: "(555) 555-3333",
+                            deadline: "July 22, 2023",
+                            notes: "Weekend availability may be required."
+                        },
+                        skills: ["Customer Service", "Zendesk", "Troubleshooting", "Communication", "CRM"],
+                        rating: 4.7
+                    }]
+                },
+                "Finance & Accounting": {
+                    rating: 4.91,
+                    skillCount: 900,
+                    jobs: [{
+                        id: 24,
+                        title: "Financial Analyst",
+                        company: "Capital Insights",
+                        location: "Boston, MA",
+                        salary: "$75,000 - $95,000 per year",
+                        type: "full-time",
+                        description: "Analyze financial data and prepare reports to help guide business decisions.",
+                        posted: "3 days ago",
+                        postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                        salaryMin: 75000,
+                        salaryMax: 95000,
+                        applications: 16,
+                        clientInfo: {
+                            contactPerson: "Robert Johnson (Finance Director)",
+                            email: "finance@capitalinsights.com",
+                            phone: "(555) 555-4444",
+                            deadline: "July 28, 2023",
+                            notes: "CPA or CFA certification preferred."
+                        },
+                        skills: ["Financial Analysis", "Excel", "Financial Modeling", "Accounting", "Data Analysis"],
+                        rating: 4.9
+                    }]
+                },
+                "Engineering & Architecture": {
+                    rating: 4.77,
+                    skillCount: 300,
+                    jobs: [{
+                        id: 25,
+                        title: "Civil Engineer",
+                        company: "Urban Design Group",
+                        location: "Denver, CO",
+                        salary: "$85,000 - $110,000 per year",
+                        type: "full-time",
+                        description: "Design and oversee construction projects including roads, bridges, and buildings.",
+                        posted: "5 days ago",
+                        postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+                        salaryMin: 85000,
+                        salaryMax: 110000,
+                        applications: 13,
+                        clientInfo: {
+                            contactPerson: "Emily Chen (Project Manager)",
+                            email: "engineering@urbandesign.com",
+                            phone: "(555) 555-5555",
+                            deadline: "July 15, 2023",
+                            notes: "PE license required."
+                        },
+                        skills: ["Civil Engineering", "AutoCAD", "Structural Design", "Project Management", "Construction"],
+                        rating: 4.7
+                    }]
                 }
-            ],
-            skills: [
-                // ... (keep existing skill-based jobs)
-                // Only showing the new skill-based jobs for brevity
-                {
-                    id: 13,
-                    title: "UI/UX Designer",
-                    company: "Digital Design Agency",
-                    location: "Remote",
-                    salary: "$85,000 - $110,000 per year",
-                    type: "full-time",
-                    description: "Design a modern website interface with a focus on user experience and responsive design principles. Create wireframes, prototypes, and high-fidelity designs.",
-                    posted: "1 day ago",
-                    postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-                    salaryMin: 85000,
-                    salaryMax: 110000,
-                    applications: 15,
-                    clientInfo: {
-                        contactPerson: "Alexandra Park (Design Director)",
-                        email: "design@digitaldesign.com",
-                        phone: "(555) 555-1234",
-                        deadline: "July 10, 2023",
-                        notes: "Please include a portfolio with at least 3 website design projects."
-                    },
-                    skills: ["UI Design", "UX Research", "Figma", "Adobe XD", "Prototyping"]
-                }, {
-                    id: 14,
-                    title: "Full Stack Developer",
-                    company: "Tech Innovators Inc.",
-                    location: "Remote",
-                    salary: "$100,000 - $130,000 per year",
-                    type: "full-time",
-                    description: "Develop a MERN stack application with React frontend and Node.js backend. Build RESTful APIs and implement database solutions with MongoDB.",
-                    posted: "2 days ago",
-                    postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-                    salaryMin: 100000,
-                    salaryMax: 130000,
-                    applications: 22,
-                    clientInfo: {
-                        contactPerson: "Michael Chen (CTO)",
-                        email: "tech@techinnovators.com",
-                        phone: "(555) 555-5678",
-                        deadline: "July 15, 2023",
-                        notes: "Experience with TypeScript is a plus. Please include links to GitHub repositories."
-                    },
-                    skills: ["React", "Node.js", "MongoDB", "Express", "JavaScript"]
-                }, {
-                    id: 15,
-                    title: "Graphic Designer",
-                    company: "Brand Visionaries",
-                    location: "New York, NY",
-                    salary: "$65,000 - $85,000 per year",
-                    type: "full-time",
-                    description: "Create a logo & branding kit including color palette, typography, and brand guidelines for various clients across different industries.",
-                    posted: "3 days ago",
-                    postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-                    salaryMin: 65000,
-                    salaryMax: 85000,
-                    applications: 17,
-                    clientInfo: {
-                        contactPerson: "Sarah Johnson (Creative Director)",
-                        email: "creative@brandvision.com",
-                        phone: "(555) 555-9012",
-                        deadline: "July 5, 2023",
-                        notes: "Submit 3 logo concepts with your application. Experience with brand guidelines preferred."
-                    },
-                    skills: ["Logo Design", "Branding", "Adobe Illustrator", "Photoshop", "Typography"]
-                }, {
-                    id: 20,
-                    title: "Website Development",
-                    company: "Web Solutions Inc.",
-                    location: "Remote",
-                    salary: "$80,000 - $120,000 per year",
-                    type: "full-time",
-                    description: "Create, build, and develop your website with skilled website developers using modern technologies. Work on both frontend and backend development.",
-                    posted: "3 days ago",
-                    postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-                    salaryMin: 80000,
-                    salaryMax: 120000,
-                    applications: 19,
-                    clientInfo: {
-                        contactPerson: "Daniel Brown (Development Lead)",
-                        email: "dev@websolutions.com",
-                        phone: "(555) 555-4567",
-                        deadline: "July 30, 2023",
-                        notes: "Please include links to 3 websites you've developed in the past year."
-                    },
-                    skills: ["HTML/CSS", "JavaScript", "Responsive Design", "WordPress", "PHP"]
-                }
-            ],
-            languages: [
-                // ... (keep existing language jobs)
-            ],
+            },
+            languages: [{
+                id: 26,
+                title: "Spanish Translator",
+                company: "Global Lingua",
+                location: "Madrid, Spain",
+                salary: "$50,000 - $70,000 per year",
+                type: "full-time",
+                description: "Provide accurate translation services between English and Spanish for business documents, websites, and marketing materials.",
+                posted: "3 days ago",
+                postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                salaryMin: 50000,
+                salaryMax: 70000,
+                applications: 8,
+                clientInfo: {
+                    contactPerson: "Carlos Mendez (Translation Manager)",
+                    email: "translations@globallingua.com",
+                    phone: "+34 91 123 4567",
+                    deadline: "July 25, 2023",
+                    notes: "Native Spanish speaker required with certification in translation."
+                },
+                skills: ["Spanish", "English", "Translation", "Proofreading", "Localization"],
+                rating: 4.8
+            }, {
+                id: 27,
+                title: "Japanese Interpreter",
+                company: "Tokyo Business Solutions",
+                location: "Tokyo, Japan",
+                salary: "¥6,000,000 - ¥8,000,000 per year",
+                type: "full-time",
+                description: "Provide simultaneous interpretation between Japanese and English for business meetings and conferences.",
+                posted: "1 week ago",
+                postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+                salaryMin: 6000000,
+                salaryMax: 8000000,
+                applications: 5,
+                clientInfo: {
+                    contactPerson: "Yuki Tanaka (HR Manager)",
+                    email: "hr@tokyobiz.com",
+                    phone: "+81 3 1234 5678",
+                    deadline: "July 30, 2023",
+                    notes: "JLPT N1 certification required with minimum 3 years experience."
+                },
+                skills: ["Japanese", "English", "Interpretation", "Business Communication", "Cultural Mediation"],
+                rating: 4.7
+            }, {
+                id: 28,
+                title: "French Content Editor",
+                company: "Paris Media Group",
+                location: "Paris, France",
+                salary: "€45,000 - €60,000 per year",
+                type: "full-time",
+                description: "Edit and proofread French language content for digital publications and marketing materials.",
+                posted: "2 days ago",
+                postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                salaryMin: 45000,
+                salaryMax: 60000,
+                applications: 12,
+                clientInfo: {
+                    contactPerson: "Sophie Laurent (Editorial Director)",
+                    email: "editorial@parismedia.com",
+                    phone: "+33 1 23 45 67 89",
+                    deadline: "August 5, 2023",
+                    notes: "Native French speaker with excellent grammar skills required."
+                },
+                skills: ["French", "Editing", "Proofreading", "Content Creation", "SEO Writing"],
+                rating: 4.9
+            }, {
+                id: 29,
+                title: "Arabic Localization Specialist",
+                company: "Middle East Digital",
+                location: "Dubai, UAE",
+                salary: "AED 180,000 - AED 240,000 per year",
+                type: "contract",
+                description: "Localize software and websites for Arabic-speaking markets, ensuring cultural appropriateness.",
+                posted: "5 days ago",
+                postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+                salaryMin: 180000,
+                salaryMax: 240000,
+                applications: 7,
+                clientInfo: {
+                    contactPerson: "Ahmed Khalid (Project Manager)",
+                    email: "localization@medigital.ae",
+                    phone: "+971 4 123 4567",
+                    deadline: "July 28, 2023",
+                    notes: "Experience with right-to-left text implementation required."
+                },
+                skills: ["Arabic", "Localization", "Software Translation", "Cultural Adaptation", "QA Testing"],
+                rating: 4.6
+            }, {
+                id: 30,
+                title: "German Technical Writer",
+                company: "Berlin Tech Docs",
+                location: "Berlin, Germany",
+                salary: "€55,000 - €75,000 per year",
+                type: "full-time",
+                description: "Create technical documentation in German for software and hardware products.",
+                posted: "1 day ago",
+                postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+                salaryMin: 55000,
+                salaryMax: 75000,
+                applications: 9,
+                clientInfo: {
+                    contactPerson: "Thomas Schmidt (Documentation Lead)",
+                    email: "docs@berlintech.de",
+                    phone: "+49 30 12345678",
+                    deadline: "August 10, 2023",
+                    notes: "Technical background in IT or engineering preferred."
+                },
+                skills: ["German", "Technical Writing", "Documentation", "Markdown", "API Documentation"],
+                rating: 4.8
+            }, {
+                id: 31,
+                title: "Mandarin Customer Support",
+                company: "Asia Connect",
+                location: "Singapore",
+                salary: "SGD 48,000 - SGD 65,000 per year",
+                type: "full-time",
+                description: "Provide customer support in Mandarin and English for e-commerce platform users.",
+                posted: "4 days ago",
+                postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+                salaryMin: 48000,
+                salaryMax: 65000,
+                applications: 15,
+                clientInfo: {
+                    contactPerson: "Li Wei (Support Manager)",
+                    email: "support@asiaconnect.sg",
+                    phone: "+65 6123 4567",
+                    deadline: "July 31, 2023",
+                    notes: "Must be fluent in both Mandarin and English."
+                },
+                skills: ["Mandarin", "English", "Customer Service", "E-commerce", "Zendesk"],
+                rating: 4.5
+            }, {
+                id: 32,
+                title: "Russian Legal Translator",
+                company: "Moscow Legal Services",
+                location: "Moscow, Russia",
+                salary: "₽3,000,000 - ₽4,200,000 per year",
+                type: "part-time",
+                description: "Translate legal documents between Russian and English with precise terminology.",
+                posted: "2 weeks ago",
+                postedDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+                salaryMin: 3000000,
+                salaryMax: 4200000,
+                applications: 6,
+                clientInfo: {
+                    contactPerson: "Elena Petrova (Legal Director)",
+                    email: "legal@moslaw.ru",
+                    phone: "+7 495 123 4567",
+                    deadline: "August 15, 2023",
+                    notes: "Law degree or legal translation certification required."
+                },
+                skills: ["Russian", "English", "Legal Translation", "Contract Law", "Notarization"],
+                rating: 4.7
+            }, {
+                id: 33,
+                title: "Portuguese Language Instructor",
+                company: "Rio Language Academy",
+                location: "Rio de Janeiro, Brazil",
+                salary: "R$60 - R$90 per hour",
+                type: "contract",
+                description: "Teach Portuguese to foreign students through online and in-person classes.",
+                posted: "3 days ago",
+                postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                salaryMin: 60,
+                salaryMax: 90,
+                applications: 11,
+                clientInfo: {
+                    contactPerson: "Ana Silva (Academic Director)",
+                    email: "academia@riolanguage.com.br",
+                    phone: "+55 21 1234 5678",
+                    deadline: "Ongoing",
+                    notes: "Teaching certification and 2+ years experience required."
+                },
+                skills: ["Portuguese", "Teaching", "Curriculum Development", "Language Assessment", "Online Education"],
+                rating: 4.9
+            }],
             topRated: [{
                 id: 13,
                 title: "UI/UX Designer",
@@ -1050,9 +1416,7 @@
                 skills: ["HTML/CSS", "JavaScript", "Responsive Design", "WordPress", "PHP"],
                 rating: 4.7
             }]
-        };
-
-        // DOM elements
+        }; // DOM elements
         const jobListingsContainer = document.getElementById('job-listings-container');
         const jobSearchForm = document.getElementById('job-search-form');
         const jobTitleInput = document.getElementById('job-title-input');
@@ -1192,29 +1556,30 @@
             let allJobs = [];
 
             if (currentTab === 'all') {
-                // Combine all jobs from all categories
-                allJobs = jobsData.all ? [...jobsData.all] : [];
+                allJobs = [...jobsData.all];
             } else if (currentTab === 'skills') {
-                allJobs = jobsData.skills ? [...jobsData.skills] : [];
+                // Flatten all skill categories into one array
+                allJobs = [];
+                for (const category in jobsData.skills) {
+                    allJobs = allJobs.concat(jobsData.skills[category].jobs);
+                }
             } else if (currentTab === 'languages') {
                 if (currentLanguage === 'all') {
-                    allJobs = jobsData.languages ? [...jobsData.languages] : [];
+                    allJobs = [...jobsData.languages];
                 } else {
-                    allJobs = jobsData.languages ? jobsData.languages.filter(job =>
-                        job.skills && job.skills.some(skill =>
-                            skill.toLowerCase() === currentLanguage ||
-                            skill.toLowerCase().includes(currentLanguage)
+                    allJobs = jobsData.languages.filter(job =>
+                        job.skills.some(skill =>
+                            skill.toLowerCase().includes(currentLanguage.toLowerCase())
                         )
-                    ) : [];
+                    );
                 }
-
             } else if (currentTab === 'topRated') {
-                allJobs = jobsData.topRated ? [...jobsData.topRated] : [];
+                allJobs = [...jobsData.topRated];
             } else if (currentTab === 'saved') {
                 const allAvailableJobs = [
-                    ...(jobsData.all || []),
-                    ...(jobsData.languages || []),
-                    ...(jobsData.topRated || [])
+                    ...jobsData.all,
+                    ...jobsData.languages,
+                    ...jobsData.topRated
                 ];
                 allJobs = allAvailableJobs.filter(job => savedJobs.includes(job.id));
             }
