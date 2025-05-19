@@ -241,6 +241,8 @@
         <button onclick="loadSection('applicants')" id="applicantsBtn"><i class="fas fa-users"></i> Applicants</button>
         <button onclick="loadSection('ratingsReviews')" id="ratingsReviewsBtn"><i class="fas fa-star"></i> Ratings & Reviews</button>
         <button onclick="loadSection('messages')" id="messagesBtn"><i class="fas fa-envelope"></i> Messages</button>
+        <button onclick="loadSection('myprofile')" id="myprofileBtn"><i class="fas fa-user"></i> My Profile</button>
+
         <button onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
 
@@ -351,6 +353,9 @@
                     break;
                 case 'messages':
                     frame.src = 'Message.html';
+                    break;
+                case 'myprofile':
+                    frame.src = 'clientprofile.html';
                     break;
                 default:
                     document.getElementById('dashboardContent').style.display = 'block';

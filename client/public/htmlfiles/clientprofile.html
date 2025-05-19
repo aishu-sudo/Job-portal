@@ -4,506 +4,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Profile | FreelanceHub</title>
+    <title>Client Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
          :root {
-            --primary-color: #4a6fa5;
-            --secondary-color: #166088;
-            --accent-color: #4fc3f7;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
+            --primary-color: #5e35b1;
+            --secondary-color: #3949ab;
+            --accent-color: #7c4dff;
+            --light-color: #f5f5f5;
+            --dark-color: #263238;
+            --success-color: #43a047;
+            --warning-color: #ffb300;
+            --border-radius: 10px;
+            --box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-content {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 20px;
-        }
-        
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        nav ul li a:hover {
-            color: var(--accent-color);
-        }
-        
-        .profile-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-bottom: 30px;
-            animation: fadeIn 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 20px;
-            border: 3px solid var(--accent-color);
-        }
-        
-        .profile-info h2 {
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-        
-        .profile-info p {
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .rating {
-            color: var(--warning-color);
-            margin-bottom: 10px;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        
-        .badge-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .badge-warning {
-            background-color: var(--warning-color);
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0e0e0 0%, #b0bec5 100%);
             color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
         }
         
-        .profile-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+        .client-card {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
-        .detail-group h3 {
-            margin-bottom: 10px;
-            color: var(--secondary-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
+        .client-card:hover {
+            transform: translateY(-5px);
         }
         
-        .detail-item {
-            margin-bottom: 10px;
+        .client-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
         }
         
-        .detail-item strong {
-            display: inline-block;
-            width: 120px;
-            color: #555;
-        }
-        
-        .company-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-        }
-        
-        .stat-value {
+        .company-logo {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
             font-size: 24px;
             font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .skills-container {
-            margin-top: 20px;
-        }
-        
-        .skill-tag {
-            display: inline-block;
-            background-color: #e9ecef;
-            padding: 5px 10px;
-            border-radius: 20px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        .jobs-container {
-            margin-top: 30px;
-        }
-        
-        .job-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .job-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .job-card h4 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .job-meta {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
             display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(94, 53, 177, 0.4);
+            transition: transform 0.3s ease;
+        }
+        
+        .company-logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .company-name {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .company-industry {
+            text-align: center;
+            color: #757575;
+            margin-bottom: 25px;
             font-size: 14px;
-            color: #666;
+            font-weight: 500;
         }
         
-        .job-meta span {
-            margin-right: 15px;
+        h2 {
+            color: var(--primary-color);
+            margin: 25px 0 15px;
+            font-size: 18px;
+            position: relative;
+            padding-bottom: 8px;
         }
         
-        .job-status {
-            font-weight: bold;
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 3px;
         }
         
-        .status-completed {
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .contact-icon {
+            background: rgba(94, 53, 177, 0.1);
+            color: var(--primary-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover .contact-icon {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .contact-details {
+            flex: 1;
+        }
+        
+        .contact-label {
+            font-size: 12px;
+            color: #757575;
+            margin-bottom: 2px;
+        }
+        
+        .contact-value {
+            font-weight: 500;
+            color: var(--dark-color);
+            word-break: break-all;
+        }
+        
+        .client-since {
+            background: rgba(67, 160, 71, 0.1);
             color: var(--success-color);
-        }
-        
-        .status-ongoing {
-            color: var(--warning-color);
-        }
-        
-        .status-pending {
-            color: var(--danger-color);
-        }
-        
-        .action-buttons {
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
             margin-top: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .buttons {
             display: flex;
             gap: 10px;
+            margin-top: 25px;
         }
         
-        .btn {
-            padding: 8px 16px;
+        button {
+            flex: 1;
+            padding: 12px;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: var(--border-radius);
             font-weight: 600;
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
-        .btn-primary {
+        .edit-btn {
             background-color: var(--primary-color);
             color: white;
         }
         
-        .btn-primary:hover {
+        .edit-btn:hover {
             background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 53, 177, 0.3);
         }
         
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--primary-color);
+        .message-btn {
+            background-color: var(--success-color);
             color: white;
         }
         
-        footer {
-            background-color: var(--dark-color);
-            color: white;
+        .message-btn:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 160, 71, 0.3);
+        }
+        
+        .projects {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        
+        .project-stat {
             text-align: center;
-            padding: 20px 0;
-            margin-top: 50px;
+            flex: 1;
         }
         
-        @media (max-width: 768px) {
-            .profile-header {
+        .project-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .project-label {
+            font-size: 12px;
+            color: #757575;
+        }
+        
+        @media (max-width: 480px) {
+            .client-card {
+                padding: 20px;
+            }
+            .buttons {
                 flex-direction: column;
-                text-align: center;
             }
-            .profile-avatar {
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-            .profile-details {
-                grid-template-columns: 1fr;
-            }
-            .company-stats {
-                grid-template-columns: 1fr;
-            }
-            .header-content {
+            .projects {
                 flex-direction: column;
-            }
-            nav ul {
-                margin-top: 15px;
-            }
-            nav ul li {
-                margin-left: 10px;
-                margin-right: 10px;
+                gap: 10px;
             }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">FreelanceHub</div>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Browse</a></li>
-                    <li><a href="#">Messages</a></li>
-                    <li><a href="#">Notifications</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <div class="client-card">
+        <div class="company-logo">DD</div>
+        <h1 class="company-name" id="companyName">Digital Design Co.</h1>
+        <p class="company-industry" id="companyIndustry">Creative Design Agency</p>
 
-    <div class="container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client Avatar" class="profile-avatar">
-                <div class="profile-info">
-                    <h2>Michael Thompson</h2>
-                    <p>CEO at TechSolutions Inc.</p>
-                    <div class="rating">
-                        ★★★★☆ (4.2)
-                        <span class="badge badge-primary">Verified</span>
-                        <span class="badge badge-warning">2 Active Jobs</span>
-                    </div>
-                    <p>San Francisco, USA · Member since 2016</p>
+        <h2>Contact Person</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="contact-details">
+                    <div class="contact-label">Design Director</div>
+                    <div class="contact-value" id="contactPerson">Alexandra Park</div>
                 </div>
             </div>
 
-            <div class="profile-details">
-                <div class="detail-group">
-                    <h3>Company Information</h3>
-                    <p>TechSolutions Inc. is a leading software development company specializing in enterprise solutions for mid-sized businesses. We help companies digitalize their operations and improve efficiency through custom software solutions.</p>
-
-                    <h3>Company Details</h3>
-                    <div class="detail-item">
-                        <strong>Founded:</strong> 2012
-                    </div>
-                    <div class="detail-item">
-                        <strong>Employees:</strong> 50-200
-                    </div>
-                    <div class="detail-item">
-                        <strong>Industry:</strong> Software Development
-                    </div>
-                    <div class="detail-item">
-                        <strong>Website:</strong> <a href="https://techsolutions.example.com" target="_blank">techsolutions.example.com</a>
-                    </div>
-                    <div class="detail-item">
-                        <strong>Address:</strong> 123 Tech Park, San Francisco, CA 94107
-                    </div>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
                 </div>
-
-                <div class="detail-group">
-                    <h3>Company Focus</h3>
-                    <p>We specialize in developing custom CRM systems, enterprise resource planning (ERP) solutions, and business intelligence platforms that help our clients streamline operations and make data-driven decisions.</p>
-
-                    <h3>Key Clients</h3>
-                    <div class="detail-item">
-                        <strong>Enterprise:</strong> FinTech Corp, HealthTrack, RetailPlus
-                    </div>
-                    <div class="detail-item">
-                        <strong>Mid-Market:</strong> FashionHub, EduSystems, LogisticsPro
-                    </div>
+                <div class="contact-details">
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value" id="contactEmail">design@digitaldesign.com</div>
                 </div>
             </div>
 
-            <div class="company-stats">
-                <div class="stat-card">
-                    <div class="stat-value">28</div>
-                    <div class="stat-label">Jobs Posted</div>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">$120K+</div>
-                    <div class="stat-label">Total Spent</div>
+                <div class="contact-details">
+                    <div class="contact-label">Phone</div>
+                    <div class="contact-value" id="contactPhone">(555) 555-1234</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">60%</div>
-                    <div class="stat-label">Repeat Hire Rate</div>
-                </div>
-            </div>
-
-            <div class="skills-container">
-                <h3>Frequently Needed Skills</h3>
-                <div>
-                    <span class="skill-tag">Web Development</span>
-                    <span class="skill-tag">Mobile Development</span>
-                    <span class="skill-tag">UI/UX Design</span>
-                    <span class="skill-tag">Cloud Computing</span>
-                    <span class="skill-tag">DevOps</span>
-                    <span class="skill-tag">Database Design</span>
-                    <span class="skill-tag">API Development</span>
-                    <span class="skill-tag">Machine Learning</span>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-primary">Post a Job</button>
-                <button class="btn btn-outline">Send Message</button>
-                <button class="btn btn-outline">View Company</button>
             </div>
         </div>
 
-        <div class="jobs-container">
-            <h2>Recent Job Postings</h2>
-
-            <div class="job-card">
-                <h4>Full-Stack Developer for SaaS Platform</h4>
-                <div class="job-meta">
-                    <span><strong>Budget:</strong> $15,000-$20,000</span>
-                    <span><strong>Posted:</strong> 2 weeks ago</span>
-                    <span><strong>Proposals:</strong> 24</span>
-                    <span class="job-status status-ongoing">Hiring</span>
-                </div>
-                <p>Looking for an experienced full-stack developer to help build a new SaaS product from scratch. Must have expertise in React, Node.js, and AWS services. The project involves creating a customer-facing dashboard with real-time analytics
-                    and reporting features.</p>
-                <div class="job-skills">
-                    <span class="skill-tag">React</span>
-                    <span class="skill-tag">Node.js</span>
-                    <span class="skill-tag">AWS</span>
-                    <span class="skill-tag">MongoDB</span>
-                </div>
+        <div class="projects">
+            <div class="project-stat">
+                <div class="project-number" id="activeProjects">12</div>
+                <div class="project-label">Active Projects</div>
             </div>
-
-            <div class="job-card">
-                <h4>UI/UX Designer for Mobile App</h4>
-                <div class="job-meta">
-                    <span><strong>Budget:</strong> $5,000-$7,000</span>
-                    <span><strong>Posted:</strong> 1 month ago</span>
-                    <span><strong>Proposals:</strong> 18</span>
-                    <span class="job-status status-completed">Filled</span>
-                </div>
-                <p>Need a talented designer to create wireframes and high-fidelity prototypes for our new fitness tracking mobile application. The ideal candidate will have experience with health-tech products and a strong portfolio of mobile app designs.</p>
-                <div class="job-skills">
-                    <span class="skill-tag">Figma</span>
-                    <span class="skill-tag">UI/UX</span>
-                    <span class="skill-tag">Mobile Design</span>
-                    <span class="skill-tag">Prototyping</span>
-                </div>
+            <div class="project-stat">
+                <div class="project-number" id="completedProjects">47</div>
+                <div class="project-label">Completed</div>
             </div>
-
-            <div class="job-card">
-                <h4>DevOps Engineer for Infrastructure Setup</h4>
-                <div class="job-meta">
-                    <span><strong>Budget:</strong> $10,000</span>
-                    <span><strong>Posted:</strong> 3 months ago</span>
-                    <span><strong>Proposals:</strong> 15</span>
-                    <span class="job-status status-completed">Completed</span>
-                </div>
-                <p>Seeking a DevOps professional to set up CI/CD pipelines, containerization, and cloud infrastructure for our enterprise application. The project requires experience with Kubernetes, Docker, and Terraform for infrastructure as code.</p>
-                <div class="job-skills">
-                    <span class="skill-tag">DevOps</span>
-                    <span class="skill-tag">Kubernetes</span>
-                    <span class="skill-tag">AWS</span>
-                    <span class="skill-tag">Terraform</span>
-                </div>
+            <div class="project-stat">
+                <div class="project-number" id="yearsWorking">5</div>
+                <div class="project-label">Years Working</div>
             </div>
+        </div>
+
+        <div class="client-since">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Client since: </span>
+            <span id="clientSince">2018</span>
+        </div>
+
+        <div class="buttons">
+            <button class="edit-btn" onclick="editClient()">
+                <i class="fas fa-edit"></i>
+                <span>Edit Profile</span>
+            </button>
+            <button class="message-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+                <span>Send Message</span>
+            </button>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2023 FreelanceHub. All rights reserved.</p>
-        </div>
-    </footer>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Simulate loading data (in a real app, this would be an API call)
-            function simulateLoading() {
-                console.log("Loading client profile data...");
-                // This is where you would fetch real data from your backend
+        // Client data - could be loaded from an API in a real application
+        const clientData = {
+            companyName: "Digital Design Co.",
+            companyIndustry: "Creative Design Agency",
+            contactPerson: "Alexandra Park",
+            contactTitle: "Design Director",
+            contactEmail: "design@digitaldesign.com",
+            contactPhone: "(555) 555-1234",
+            activeProjects: 12,
+            completedProjects: 47,
+            yearsWorking: 5,
+            clientSince: "2018"
+        };
+
+        // Initialize the profile with data
+        function initProfile() {
+            document.getElementById("companyName").textContent = clientData.companyName;
+            document.getElementById("companyIndustry").textContent = clientData.companyIndustry;
+            document.getElementById("contactPerson").textContent = clientData.contactPerson;
+            document.getElementById("contactEmail").textContent = clientData.contactEmail;
+            document.getElementById("contactPhone").textContent = clientData.contactPhone;
+            document.getElementById("activeProjects").textContent = clientData.activeProjects;
+            document.getElementById("completedProjects").textContent = clientData.completedProjects;
+            document.getElementById("yearsWorking").textContent = clientData.yearsWorking;
+            document.getElementById("clientSince").textContent = clientData.clientSince;
+
+            // Set company logo initials
+            const companyName = clientData.companyName;
+            const initials = companyName.split(' ').map(word => word[0]).join('');
+            document.querySelector(".company-logo").textContent = initials;
+        }
+
+        // Edit client profile
+        function editClient() {
+            const newCompanyName = prompt("Enter company name:", clientData.companyName);
+            const newCompanyIndustry = prompt("Enter industry:", clientData.companyIndustry);
+            const newContactPerson = prompt("Enter contact person:", clientData.contactPerson);
+            const newContactTitle = prompt("Enter contact title:", clientData.contactTitle);
+            const newContactEmail = prompt("Enter email:", clientData.contactEmail);
+            const newContactPhone = prompt("Enter phone:", clientData.contactPhone);
+            const newClientSince = prompt("Enter client since year:", clientData.clientSince);
+
+            if (newCompanyName) {
+                clientData.companyName = newCompanyName;
+                document.getElementById("companyName").textContent = newCompanyName;
+                // Update logo initials
+                const initials = newCompanyName.split(' ').map(word => word[0]).join('');
+                document.querySelector(".company-logo").textContent = initials;
             }
 
-            simulateLoading();
-        });
+            if (newCompanyIndustry) {
+                clientData.companyIndustry = newCompanyIndustry;
+                document.getElementById("companyIndustry").textContent = newCompanyIndustry;
+            }
+
+            if (newContactPerson) {
+                clientData.contactPerson = newContactPerson;
+                document.getElementById("contactPerson").textContent = newContactPerson;
+            }
+
+            if (newContactTitle) {
+                clientData.contactTitle = newContactTitle;
+                document.querySelector(".contact-label").textContent = newContactTitle;
+            }
+
+            if (newContactEmail) {
+                clientData.contactEmail = newContactEmail;
+                document.getElementById("contactEmail").textContent = newContactEmail;
+            }
+
+            if (newContactPhone) {
+                clientData.contactPhone = newContactPhone;
+                document.getElementById("contactPhone").textContent = newContactPhone;
+            }
+
+            if (newClientSince) {
+                clientData.clientSince = newClientSince;
+                document.getElementById("clientSince").textContent = newClientSince;
+            }
+        }
+
+        // Send message to client
+        function sendMessage() {
+            const subject = encodeURIComponent("Regarding our project");
+            const body = encodeURIComponent(`Dear ${clientData.contactPerson},\n\n`);
+            window.location.href = `mailto:${clientData.contactEmail}?subject=${subject}&body=${body}`;
+        }
+
+        // Initialize the profile when the page loads
+        window.onload = initProfile;
     </script>
 </body>
 
