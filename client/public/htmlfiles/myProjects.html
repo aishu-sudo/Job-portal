@@ -230,6 +230,41 @@
             border-radius: 8px;
         }
         
+        .project-meta-top {
+            display: flex;
+            gap: 15px;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .project-type {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .project-location {
+            display: flex;
+            align-items: center;
+        }
+        
+        .project-location:before {
+            content: "📍";
+            margin-right: 4px;
+        }
+        /* Update modal styles to include the new elements */
+        
+        #modal-project-meta-top {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        #modal-project-meta-top .project-type {
+            font-size: 14px;
+        }
+        
         @media (max-width: 768px) {
             .projects-grid {
                 grid-template-columns: 1fr;
@@ -265,6 +300,10 @@
                 <div class="project-details">
                     <h3 class="project-title">E-commerce Website Development</h3>
                     <p class="project-client">TechSolutions Inc.</p>
+                    <div class="project-meta-top">
+                        <span class="project-type">Full-time</span>
+                        <span class="project-location">Remote</span>
+                    </div>
                     <p class="project-description">Built a responsive e-commerce website with React and Node.js backend. Implemented Redux for state management and integrated with REST APIs for product data.</p>
                     <div class="project-skills">
                         <span class="skill-tag">React</span>
@@ -287,6 +326,10 @@
                 <div class="project-details">
                     <h3 class="project-title">Business Website Redesign</h3>
                     <p class="project-client">Global Consulting</p>
+                    <div class="project-meta-top">
+                        <span class="project-type">Contract</span>
+                        <span class="project-location">New York, NY</span>
+                    </div>
                     <p class="project-description">Redesigned and developed a modern business website with improved user experience and performance optimizations.</p>
                     <div class="project-skills">
                         <span class="skill-tag">HTML/CSS</span>
@@ -309,6 +352,10 @@
                 <div class="project-details">
                     <h3 class="project-title">Fitness App UI/UX Design</h3>
                     <p class="project-client">Creative Minds LLC</p>
+                    <div class="project-meta-top">
+                        <span class="project-type">Part-time</span>
+                        <span class="project-location">San Francisco, CA</span>
+                    </div>
                     <p class="project-description">Designed wireframes and high-fidelity prototypes for a fitness tracking mobile application. Conducted user research and created design system.</p>
                     <div class="project-skills">
                         <span class="skill-tag">Figma</span>
@@ -323,112 +370,114 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Project Details Modal -->
-    <div class="modal" id="project-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-image" id="modal-project-image">
-                Project Image Preview
+        <!-- Project Details Modal -->
+        <div class="modal" id="project-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-image" id="modal-project-image">
+                    Project Image Preview
+                </div>
+                <h2 id="modal-project-title">Project Title</h2>
+                <p class="project-client" id="modal-project-client">Client Name</p>
+                <div class="project-meta-top" id="modal-project-meta-top">
+                    <span class="project-type">Job Type</span>
+                    <span class="project-location">Location</span>
+                </div>
+                <div class="project-meta">
+                    <span class="project-price" id="modal-project-price">$0 - $0</span>
+                    <span class="project-status" id="modal-project-status">Status</span>
+                </div>
+                <div class="project-skills" id="modal-project-skills">
+                    <!-- Skills will be added here -->
+                </div>
+                <p class="project-description" id="modal-project-description">
+                    Project description will appear here...
+                </p>
             </div>
-            <h2 id="modal-project-title">Project Title</h2>
-            <p class="project-client" id="modal-project-client">Client Name</p>
-            <div class="project-meta">
-                <span class="project-price" id="modal-project-price">$0 - $0</span>
-                <span class="project-status" id="modal-project-status">Status</span>
-            </div>
-            <div class="project-skills" id="modal-project-skills">
-                <!-- Skills will be added here -->
-            </div>
-            <p class="project-description" id="modal-project-description">
-                Project description will appear here...
-            </p>
         </div>
-    </div>
+        <script>
+            // Simple filter functionality
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
 
-    <script>
-        // Simple filter functionality
-        document.querySelectorAll('.filter-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove active class from all buttons
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
+                    // Add active class to clicked button
+                    this.classList.add('active');
 
-                // Add active class to clicked button
-                this.classList.add('active');
+                    const filter = this.dataset.filter;
+                    const projects = document.querySelectorAll('.project-card');
 
-                const filter = this.dataset.filter;
-                const projects = document.querySelectorAll('.project-card');
+                    projects.forEach(project => {
+                        const status = project.querySelector('.project-status').textContent.toLowerCase();
 
-                projects.forEach(project => {
-                    const status = project.querySelector('.project-status').textContent.toLowerCase();
-
-                    if (filter === 'all' ||
-                        (filter === 'completed' && status === 'completed') ||
-                        (filter === 'in-progress' && status === 'in progress')) {
-                        project.style.display = 'block';
-                    } else {
-                        project.style.display = 'none';
-                    }
+                        if (filter === 'all' ||
+                            (filter === 'completed' && status === 'completed') ||
+                            (filter === 'in-progress' && status === 'in progress')) {
+                            project.style.display = 'block';
+                        } else {
+                            project.style.display = 'none';
+                        }
+                    });
                 });
             });
-        });
 
-        // Modal functionality
-        const modal = document.getElementById('project-modal');
-        const closeBtn = document.querySelector('.close-modal');
+            // Modal functionality
+            const modal = document.getElementById('project-modal');
+            const closeBtn = document.querySelector('.close-modal');
 
-        // When any project card is clicked
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const title = this.querySelector('.project-title').textContent;
-                const client = this.querySelector('.project-client').textContent;
-                const price = this.querySelector('.project-price').textContent;
-                const status = this.querySelector('.project-status').textContent;
-                const description = this.querySelector('.project-description').textContent;
+            // When any project card is clicked
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const title = this.querySelector('.project-title').textContent;
+                    const client = this.querySelector('.project-client').textContent;
+                    const price = this.querySelector('.project-price').textContent;
+                    const status = this.querySelector('.project-status').textContent;
+                    const description = this.querySelector('.project-description').textContent;
 
-                // Get all skills
-                const skills = [];
-                this.querySelectorAll('.skill-tag').forEach(tag => {
-                    skills.push(tag.textContent);
+                    // Get all skills
+                    const skills = [];
+                    this.querySelectorAll('.skill-tag').forEach(tag => {
+                        skills.push(tag.textContent);
+                    });
+
+                    // Update modal content
+                    document.getElementById('modal-project-title').textContent = title;
+                    document.getElementById('modal-project-client').textContent = client;
+                    document.getElementById('modal-project-price').textContent = price;
+                    document.getElementById('modal-project-status').textContent = status;
+                    document.getElementById('modal-project-description').textContent = description;
+
+                    // Update skills
+                    const skillsContainer = document.getElementById('modal-project-skills');
+                    skillsContainer.innerHTML = '';
+                    skills.forEach(skill => {
+                        const span = document.createElement('span');
+                        span.className = 'skill-tag';
+                        span.textContent = skill;
+                        skillsContainer.appendChild(span);
+                    });
+
+                    // Show modal
+                    modal.style.display = 'flex';
                 });
-
-                // Update modal content
-                document.getElementById('modal-project-title').textContent = title;
-                document.getElementById('modal-project-client').textContent = client;
-                document.getElementById('modal-project-price').textContent = price;
-                document.getElementById('modal-project-status').textContent = status;
-                document.getElementById('modal-project-description').textContent = description;
-
-                // Update skills
-                const skillsContainer = document.getElementById('modal-project-skills');
-                skillsContainer.innerHTML = '';
-                skills.forEach(skill => {
-                    const span = document.createElement('span');
-                    span.className = 'skill-tag';
-                    span.textContent = skill;
-                    skillsContainer.appendChild(span);
-                });
-
-                // Show modal
-                modal.style.display = 'flex';
             });
-        });
 
-        // Close modal when X is clicked
-        closeBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
+            // Close modal when X is clicked
+            closeBtn.addEventListener('click', function() {
                 modal.style.display = 'none';
-            }
-        });
-    </script>
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        </script>
 </body>
 
 </html>
