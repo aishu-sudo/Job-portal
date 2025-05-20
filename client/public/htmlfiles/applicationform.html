@@ -487,6 +487,42 @@
             console.log('Navigating back to job listings');
             // window.history.back() or specific route
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load job details if coming from notification
+            const selectedProjectId = localStorage.getItem('selectedProjectId');
+            if (selectedProjectId) {
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                const project = projects.find(p => p.projectId === selectedProjectId);
+
+                if (project) {
+                    // Update job details in the header
+                    document.querySelector('.job-title').textContent = project.title;
+                    document.querySelector('.job-company').textContent = project.company;
+
+                    // Update job meta information
+                    const metaItems = document.querySelectorAll('.meta-item');
+                    metaItems[0].querySelector('span').textContent = project.location;
+                    metaItems[1].querySelector('span').textContent = `$${project.salaryMin} - $${project.salaryMax}`;
+                    metaItems[2].querySelector('span').textContent = project.jobType;
+
+                    // Update job description
+                    document.querySelector('.job-description').innerHTML = `<p>${project.description}</p>`;
+
+                    // Update skills
+                    const skillsContainer = document.querySelector('.skills-tags');
+                    skillsContainer.innerHTML = project.skills.map(skill =>
+                        `<span class="skill-tag">${skill}</span>`
+                    ).join('');
+
+                    // Update client information
+                    document.querySelector('.client-info .client-detail:nth-child(1) span').textContent = project.company;
+
+                    // Clear the selected project ID
+                    localStorage.removeItem('selectedProjectId');
+                }
+            }
+        });
     </script>
 </body>
 

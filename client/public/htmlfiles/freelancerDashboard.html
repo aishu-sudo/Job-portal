@@ -274,9 +274,10 @@
     </div>
 
     <script>
-        // Set dashboard as active by default
+        // Set dashboard as active by default and load notifications
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('dashboardBtn').classList.add('active');
+            loadNotifications(); // Load notifications when page loads
         });
 
         function loadSection(section) {
@@ -324,6 +325,9 @@
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
             dropdown.classList.toggle('show');
+            if (dropdown.classList.contains('show')) {
+                loadNotifications(); // Reload notifications when dropdown is opened
+            }
         }
 
         function markAllAsRead() {
@@ -350,6 +354,136 @@
         function logout() {
             // Add logout functionality here
             alert('Logging out...');
+        }
+
+        function loadNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('freelancerNotifications')) || [];
+            const notificationContainer = document.querySelector('.notification-dropdown');
+            const notificationItems = notificationContainer.querySelectorAll('.notification-item');
+
+            // Remove existing notification items except the header
+            notificationItems.forEach(item => {
+                if (!item.classList.contains('notification-header')) {
+                    item.remove();
+                }
+            });
+
+            // Add new notifications
+            notifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = `notification-item ${notification.read ? '' : 'unread'}`;
+                notificationItem.innerHTML = `
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${formatTimeAgo(new Date(notification.time))}</div>
+                `;
+
+                // Add click handler to view project details and apply
+                notificationItem.addEventListener('click', () => {
+                    if (notification.type === 'new_project') {
+                        viewProjectDetails(notification);
+                        markNotificationAsRead(notification.id);
+                    }
+                });
+
+                // Insert after the header
+                notificationContainer.insertBefore(notificationItem, notificationContainer.children[1]);
+            });
+
+            // Update notification badge
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const badge = document.querySelector('.notification-badge');
+            badge.textContent = unreadCount;
+            badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+        }
+
+        function viewProjectDetails(notification) {
+            if (notification.type === 'new_project') {
+                // Create modal for project details
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.display = 'block';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 800px; background: white; padding: 20px; border-radius: 8px;">
+                        <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
+                        <h2>${notification.projectData.title}</h2>
+                        <p><strong>Company:</strong> ${notification.projectData.company}</p>
+                        <p><strong>Job Type:</strong> ${notification.projectData.jobType}</p>
+                        <p><strong>Location:</strong> ${notification.projectData.location}</p>
+                        <p><strong>Salary Range:</strong> ${notification.projectData.salaryMin} - ${notification.projectData.salaryMax} per ${notification.projectData.salaryPeriod}</p>
+                        <div style="margin-top: 15px;">
+                            <strong>Description:</strong>
+                            <p style="margin-top: 5px; white-space: pre-wrap;">${notification.projectData.description}</p>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>Required Skills:</strong>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
+                                ${notification.projectData.skills.map(skill => 
+                                    `<span style="background: #e0f2fe; padding: 5px 10px; border-radius: 15px;">${skill}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; text-align: right;">
+                            <button onclick="applyForJob('${notification.projectData.projectId}')" 
+                                    style="background: #1976d2; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                                Apply Now
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                // Close modal when clicking the X or outside the modal
+                modal.querySelector('.close').onclick = function() {
+                    document.body.removeChild(modal);
+                };
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                };
+            }
+        }
+
+        function applyForJob(projectId) {
+            // Store the project ID in localStorage
+            localStorage.setItem('selectedProjectId', projectId);
+            // Redirect to job application page
+            window.location.href = 'applicationform.html';
+        }
+
+        function markNotificationAsRead(notificationId) {
+            const notifications = JSON.parse(localStorage.getItem('freelancerNotifications')) || [];
+            const updatedNotifications = notifications.map(notification => {
+                if (notification.id === notificationId) {
+                    return {...notification, read: true};
+                }
+                return notification;
+            });
+            localStorage.setItem('freelancerNotifications', JSON.stringify(updatedNotifications));
+            loadNotifications();
+        }
+
+        function formatTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + ' years ago';
+
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + ' months ago';
+
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + ' days ago';
+
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + ' hours ago';
+
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + ' minutes ago';
+
+            return Math.floor(seconds) + ' seconds ago';
         }
     </script>
 

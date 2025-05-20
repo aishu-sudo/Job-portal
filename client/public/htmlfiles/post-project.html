@@ -339,24 +339,35 @@
                     salaryMax: document.getElementById('salary-max').value,
                     salaryPeriod: document.getElementById('salary-period').value,
                     description: document.getElementById('project-description').value,
-                    skills: skills
+                    skills: skills,
+                    projectId: Date.now().toString(), // Generate unique project ID
+                    postedAt: new Date().toISOString()
                 };
 
-                // Check if we're in an iframe (which means we're coming from client dashboard)
-                const isFromClientDashboard = window.self !== window.top;
+                // Create notification for freelancers
+                const freelancerNotifications = JSON.parse(localStorage.getItem('freelancerNotifications')) || [];
+                const newNotification = {
+                    id: Date.now().toString(),
+                    type: 'new_project',
+                    title: 'New Job Posted',
+                    message: `A new ${formData.jobType} job "${formData.title}" has been posted by ${formData.company}`,
+                    time: new Date().toISOString(),
+                    read: false,
+                    projectData: formData
+                };
 
-                if (isFromClientDashboard) {
-                    // Direct posting from client dashboard
-                    // TODO: Add your project posting logic here
-                    console.log('Posting project directly:', formData);
-                    alert('Project posted successfully!');
-                    // Redirect back to client dashboard
-                    window.parent.location.href = 'clientDashboard.html';
-                } else {
-                    // Store form data and redirect to login
-                    localStorage.setItem('pendingProjectData', JSON.stringify(formData));
-                    window.location.href = 'login.html';
-                }
+                // Add notification to the beginning of the array
+                freelancerNotifications.unshift(newNotification);
+                localStorage.setItem('freelancerNotifications', JSON.stringify(freelancerNotifications));
+
+                // Store the project data
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                projects.unshift(formData); // Add new project to the beginning
+                localStorage.setItem('projects', JSON.stringify(projects));
+
+                alert('Project posted successfully!');
+                // Redirect back to client dashboard
+                window.parent.location.href = 'clientDashboard.html';
             });
 
             // Make removeSkill available globally for the skill tags
