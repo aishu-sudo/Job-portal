@@ -243,6 +243,7 @@
         <button onclick="loadSection('freelanceroptions')" id="freelanceroptionsBtn"><i class="fas fa-user"></i> Hire Freelancers</button>
         <button onclick="loadSection('messages')" id="messagesBtn"><i class="fas fa-envelope"></i> Messages</button>
         <button onclick="loadSection('myprofile')" id="myprofileBtn"><i class="fas fa-user"></i> My Profile</button>
+        <button onclick="loadSection('clientpayment')" id="clientpaymentBtn"><i class="fas fa-credit-card"></i> Payment Options</button>
 
         <button onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
@@ -390,6 +391,9 @@
                     break;
                 case 'myprofile':
                     frame.src = 'clientprofile.html';
+                    break;
+                case 'clientpayment':
+                    frame.src = 'clientpayment.html';
                     break;
                 default:
                     document.getElementById('dashboardContent').style.display = 'block';

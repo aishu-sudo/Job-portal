@@ -209,6 +209,7 @@
 
         <button onclick="loadSection('messages')" id="messagesBtn"><i class="fas fa-comments"></i> Messages</button>
         <button onclick="loadSection('filterBySkill')" id="filterBySkillBtn"><i class="fas fa-cogs"></i> JobsCategory</button>
+        <button onclick="loadSection('payments')" id="paymentsBtn"><i class="fas fa-wallet"></i> Payments</button>
 
         <button onclick="loadSection('profile')" id="profileBtn"><i class="fas fa-user"></i> My Profile</button>
         <button onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -313,8 +314,11 @@
                 case 'filterBySkill':
                     frame.src = 'jobs.html?filter=skill';
                     break;
+                case 'payments':
+                    frame.src = 'freelancerpayment.html';
+                    break;
                 case 'profile':
-                    frame.src = 'freelanceroptions.html';
+                    frame.src = 'freelancerprofile.html';
                     break;
                 default:
                     document.getElementById('dashboardContent').style.display = 'block';
@@ -443,6 +447,41 @@
                         document.body.removeChild(modal);
                     }
                 };
+            } else if (notification.type === 'payment_received') {
+                // Create modal for payment details
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.display = 'block';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 600px; background: white; padding: 20px; border-radius: 8px;">
+                        <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
+                        <h2>Payment Received</h2>
+                        <div style="margin-top: 20px;">
+                            <p><strong>Amount:</strong> $${notification.paymentData.amount}</p>
+                            <p><strong>From:</strong> ${notification.paymentData.clientName}</p>
+                            <p><strong>Payment ID:</strong> ${notification.paymentData.paymentId}</p>
+                            <p><strong>Time:</strong> ${formatTimeAgo(new Date(notification.time))}</p>
+                        </div>
+                        <div style="margin-top: 20px; text-align: right;">
+                            <button onclick="acceptPayment('${notification.paymentData.paymentId}', ${notification.paymentData.amount})" 
+                                    style="background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                                Accept Payment
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                // Close modal when clicking the X or outside the modal
+                modal.querySelector('.close').onclick = function() {
+                    document.body.removeChild(modal);
+                };
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                };
             }
         }
 
@@ -451,6 +490,15 @@
             localStorage.setItem('selectedProjectId', projectId);
             // Redirect to job application page
             window.location.href = 'applicationform.html';
+        }
+
+        function acceptPayment(paymentId, amount) {
+            // Redirect to payment page with pre-filled amount
+            localStorage.setItem('pendingPayment', JSON.stringify({
+                paymentId: paymentId,
+                amount: amount
+            }));
+            window.location.href = 'freelancerpayment.html';
         }
 
         function markNotificationAsRead(notificationId) {
