@@ -1496,6 +1496,28 @@
                 localStorage.setItem('appliedJobs', JSON.stringify(appliedJobs));
             }
 
+            // Store application notification for client
+            const clientNotifications = JSON.parse(localStorage.getItem('clientNotifications')) || [];
+            const newNotification = {
+                id: Date.now(),
+                type: 'new_application',
+                title: 'New Job Application',
+                message: `${fullName} has applied for the position "${job.title}"`,
+                time: new Date().toISOString(),
+                read: false,
+                jobId: job.id,
+                applicantInfo: {
+                    name: fullName,
+                    email: email,
+                    phone: document.getElementById('phone').value.trim(),
+                    resume: document.getElementById('resume').files[0].name,
+                    portfolio: document.getElementById('portfolio').value.trim(),
+                    coverLetter: document.getElementById('coverLetter').value.trim()
+                }
+            };
+            clientNotifications.unshift(newNotification);
+            localStorage.setItem('clientNotifications', JSON.stringify(clientNotifications));
+
             // Show success message
             alert('Your application has been submitted successfully!');
 
