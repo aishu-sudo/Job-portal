@@ -240,6 +240,7 @@
         <button onclick="loadSection('post-project')" id="post-projectBtn"><i class="fas fa-plus-circle"></i> Post Project</button>
         <button onclick="loadSection('applicants')" id="applicantsBtn"><i class="fas fa-users"></i> Applicants</button>
         <button onclick="loadSection('ratingsReviews')" id="ratingsReviewsBtn"><i class="fas fa-star"></i> Ratings & Reviews</button>
+        <button onclick="loadSection('freelanceroptions')" id="freelanceroptionsBtn"><i class="fas fa-users"></i> Hire Freelancers</button>
         <button onclick="loadSection('messages')" id="messagesBtn"><i class="fas fa-envelope"></i> Messages</button>
         <button onclick="loadSection('myprofile')" id="myprofileBtn"><i class="fas fa-user"></i> My Profile</button>
 
@@ -311,7 +312,128 @@
     </div>
 
     <script>
-        // Set dashboard as active by default
+        // clientDashboard.js
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth state
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                    window.location.href = '/login.html?redirect=clientDashboard.html';
+                    return;
+                }
+
+                // Verify user is a client
+                getDoc(doc(db, "users", user.uid)).then((docSnap) => {
+                    if (!docSnap.exists() || docSnap.data().userType !== "client") {
+                        window.location.href = '/login.html?redirect=clientDashboard.html';
+                        return;
+                    }
+
+                    // User is authenticated client - load data
+                    loadFilteredFreelancers();
+                });
+            });
+        });
+
+        function loadFilteredFreelancers() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filterType = urlParams.get('filter');
+            const filterValue = urlParams.get('value');
+
+            if (filterType && filterValue) {
+                // Load freelancers based on filter
+                if (filterType === 'skill') {
+                    loadFreelancersBySkill(decodeURIComponent(filterValue));
+                } else if (filterType === 'location') {
+                    loadFreelancersByLocation(decodeURIComponent(filterValue));
+                }
+            } else {
+                // Load all freelancers
+                loadAllFreelancers();
+            }
+        }
+
+        async function loadFreelancersBySkill(skill) {
+            try {
+                const response = await fetch(`/api/freelancers?skill=${encodeURIComponent(skill)}`);
+                const {
+                    data: freelancers
+                } = await response.json();
+                renderFreelancers(freelancers, `Freelancers with skill: ${skill}`);
+            } catch (error) {
+                console.error('Error loading freelancers:', error);
+            }
+        }
+
+        async function loadFreelancersByLocation(location) {
+            try {
+                const response = await fetch(`/api/freelancers?location=${encodeURIComponent(location)}`);
+                const {
+                    data: freelancers
+                } = await response.json();
+                renderFreelancers(freelancers, `Freelancers from: ${location}`);
+            } catch (error) {
+                console.error('Error loading freelancers:', error);
+            }
+        }
+
+        async function loadAllFreelancers() {
+            try {
+                const response = await fetch('/api/freelancers');
+                const {
+                    data: freelancers
+                } = await response.json();
+                renderFreelancers(freelancers, 'All Freelancers');
+            } catch (error) {
+                console.error('Error loading freelancers:', error);
+            }
+        }
+
+        function renderFreelancers(freelancers, title) {
+            const container = document.querySelector('.freelancers-container');
+            const titleElement = document.querySelector('.freelancers-title');
+
+            if (titleElement) {
+                titleElement.textContent = title;
+            }
+
+            if (!container) return;
+
+            container.innerHTML = freelancers.map(freelancer => `
+        <div class="freelancer-card">
+            <img src="${freelancer.profilePicture || 'default-profile.jpg'}" alt="${freelancer.name}">
+            <h3>${freelancer.name}</h3>
+            <div class="skills">
+                ${freelancer.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+            </div>
+            <p class="location"><i class="fas fa-map-marker-alt"></i> ${freelancer.location}</p>
+            <p class="rating">${freelancer.rating} ★</p>
+            <button class="hire-btn" data-id="${freelancer._id}">Hire Now</button>
+        </div>
+    `).join('');
+
+    // Add event listeners to hire buttons
+    document.querySelectorAll('.hire-btn').forEach(button => {
+        button.addEventListener('click', initiateHireProcess);
+    });
+}
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('dashboardBtn').classList.add('active');
         });
@@ -350,6 +472,9 @@
                     break;
                 case 'ratingsReviews':
                     frame.src = 'RatingsReviews.html';
+                case 'freelanceroptions':
+                    frame.src = 'freelanceroptions.html';
+                    break;
                     break;
                 case 'messages':
                     frame.src = 'Message.html';

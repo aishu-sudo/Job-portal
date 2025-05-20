@@ -373,25 +373,34 @@
         }
         
         .freelancer-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
             padding: 20px;
-            max-width: 1400px;
-            margin: auto;
-            text-align: center;
-            padding: 50px 20px;
+            background-color: #000;
         }
         
         .freelancer {
-            position: relative;
+            width: 250px;
+            background-color: #111;
+            color: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
-            background: #222;
             text-align: center;
-            height: 350px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+        
+        .freelancer-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-color: #222;
+        }
+        
+        .freelancer-details {
+            padding: 15px;
         }
         
         .freelancer a {
@@ -401,26 +410,6 @@
             /* Keep original text color */
             display: block;
             /* Make the entire card clickable */
-        }
-        
-        .freelancer img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 10px 10px 0 0;
-        }
-        
-        .freelancer-details {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
         }
         
         .freelancer:hover .freelancer-details {
