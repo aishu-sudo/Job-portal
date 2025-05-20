@@ -345,6 +345,35 @@
                     document.getElementById('post-projectBtn').classList.add('active');
                     frame.src = 'post-project.html';
                     frame.style.display = 'block';
+
+                    // Check for pending project data
+                    frame.onload = function() {
+                        const pendingProjectData = localStorage.getItem('pendingProjectData');
+                        if (pendingProjectData) {
+                            const formData = JSON.parse(pendingProjectData);
+                            const frameDoc = frame.contentDocument || frame.contentWindow.document;
+
+                            // Populate form fields
+                            frameDoc.getElementById('project-title').value = formData.title;
+                            frameDoc.getElementById('company-name').value = formData.company;
+                            frameDoc.getElementById('job-type').value = formData.jobType;
+                            frameDoc.getElementById('location').value = formData.location;
+                            frameDoc.getElementById('salary-min').value = formData.salaryMin;
+                            frameDoc.getElementById('salary-max').value = formData.salaryMax;
+                            frameDoc.getElementById('salary-period').value = formData.salaryPeriod;
+                            frameDoc.getElementById('project-description').value = formData.description;
+
+                            // Add skills
+                            formData.skills.forEach(skill => {
+                                const skillInput = frameDoc.getElementById('skill-input');
+                                skillInput.value = skill;
+                                frameDoc.getElementById('add-skill').click();
+                            });
+
+                            // Clear pending data
+                            localStorage.removeItem('pendingProjectData');
+                        }
+                    };
                     break;
                 case 'applicants':
                     frame.src = 'applicantsPage.html';

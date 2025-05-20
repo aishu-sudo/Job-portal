@@ -60,14 +60,20 @@ if (loginForm) {
             showMessage("✅ Login successful! Redirecting...", "success");
 
             setTimeout(() => {
+                // Check if there's pending project data
+                const pendingProjectData = localStorage.getItem('pendingProjectData');
+
                 if (role === "client") {
-                    console.log("Redirecting to client dashboard...");
-                    window.location.href = "clientDashboard.html";
+                    if (pendingProjectData) {
+                        // Clear the pending data and redirect to post-project section
+                        localStorage.removeItem('pendingProjectData');
+                        window.location.href = "clientDashboard.html?section=post-project";
+                    } else {
+                        window.location.href = "clientDashboard.html";
+                    }
                 } else if (role === "freelancer") {
-                    console.log("Redirecting to freelancer dashboard...");
                     window.location.href = "freelancerDashboard.html";
                 } else {
-                    console.log("Redirecting to default dashboard...");
                     window.location.href = "dashboard.html";
                 }
             }, 1500);

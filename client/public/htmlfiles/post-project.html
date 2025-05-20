@@ -286,94 +286,79 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                    const form = document.getElementById('project-form');
-                    const skillsContainer = document.getElementById('skills-container');
-                    const skillInput = document.getElementById('skill-input');
-                    const addSkillBtn = document.getElementById('add-skill');
-                    const previewCard = document.getElementById('preview-card');
-                    const projectPreview = document.getElementById('project-preview');
+            const form = document.getElementById('project-form');
+            const skillsContainer = document.getElementById('skills-container');
+            const skillInput = document.getElementById('skill-input');
+            const addSkillBtn = document.getElementById('add-skill');
+            const previewCard = document.getElementById('preview-card');
+            const projectPreview = document.getElementById('project-preview');
 
-                    let skills = [];
+            let skills = [];
 
-                    // Add skill functionality
-                    addSkillBtn.addEventListener('click', function() {
-                        const skill = skillInput.value.trim();
-                        if (skill && !skills.includes(skill)) {
-                            skills.push(skill);
-                            renderSkills();
-                            skillInput.value = '';
-                        }
-                    });
+            // Add skill functionality
+            addSkillBtn.addEventListener('click', function() {
+                const skill = skillInput.value.trim();
+                if (skill && !skills.includes(skill)) {
+                    skills.push(skill);
+                    renderSkills();
+                    skillInput.value = '';
+                }
+            });
 
-                    // Remove skill functionality
-                    function removeSkill(skillToRemove) {
-                        skills = skills.filter(skill => skill !== skillToRemove);
-                        renderSkills();
-                    }
+            // Remove skill functionality
+            function removeSkill(skillToRemove) {
+                skills = skills.filter(skill => skill !== skillToRemove);
+                renderSkills();
+            }
 
-                    // Render skills list
-                    function renderSkills() {
-                        skillsContainer.innerHTML = '';
-                        skills.forEach(skill => {
-                            const tag = document.createElement('div');
-                            tag.className = 'skill-tag';
-                            tag.innerHTML = `
+            // Render skills list
+            function renderSkills() {
+                skillsContainer.innerHTML = '';
+                skills.forEach(skill => {
+                    const tag = document.createElement('div');
+                    tag.className = 'skill-tag';
+                    tag.innerHTML = `
                         ${skill}
                         <button type="button" onclick="removeSkill('${skill}')">×</button>
                     `;
-                            skillsContainer.appendChild(tag);
-                        });
-                    }
+                    skillsContainer.appendChild(tag);
+                });
+            }
 
-                    // Form submission
-                    form.addEventListener('submit', function(e) {
-                                e.preventDefault();
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-                                // Get form values
-                                const title = document.getElementById('project-title').value;
-                                const company = document.getElementById('company-name').value;
-                                const jobType = document.getElementById('job-type').value;
-                                const location = document.getElementById('location').value;
-                                const salaryMin = document.getElementById('salary-min').value;
-                                const salaryMax = document.getElementById('salary-max').value;
-                                const salaryPeriod = document.getElementById('salary-period').value;
-                                const description = document.getElementById('project-description').value;
+                // Get form values
+                const formData = {
+                    title: document.getElementById('project-title').value,
+                    company: document.getElementById('company-name').value,
+                    jobType: document.getElementById('job-type').value,
+                    location: document.getElementById('location').value,
+                    salaryMin: document.getElementById('salary-min').value,
+                    salaryMax: document.getElementById('salary-max').value,
+                    salaryPeriod: document.getElementById('salary-period').value,
+                    description: document.getElementById('project-description').value,
+                    skills: skills
+                };
 
-                                // Generate preview
-                                let previewHTML = `
-                    <h3 class="preview-title">${title}</h3>
-                    <div class="preview-company">${company}</div>
-                    <div class="preview-details">
-                        ${location ? location + ' • ' : ''}
-                        ${salaryMin && salaryMax ? `$${salaryMin} - $${salaryMax} per ${salaryPeriod} • ` : ''}
-                        ${jobType ? jobType.charAt(0).toUpperCase() + jobType.slice(1).replace('-', ' ') : ''}
-                    </div>
-                    <div class="preview-description">
-                        ${description.replace(/\n/g, '<br>')}
-                    </div>
-                `;
-                
-                if (skills.length > 0) {
-                    previewHTML += `
-                        <div class="preview-skills">
-                            <h4>Required Skills:</h4>
-                            <div class="skill-list">
-                                ${skills.map(skill => `<span class="skill-item">${skill}</span>`).join('')}
-                            </div>
-                        </div>
-                    `;
+                // Check if we're in an iframe (which means we're coming from client dashboard)
+                const isFromClientDashboard = window.self !== window.top;
+
+                if (isFromClientDashboard) {
+                    // Direct posting from client dashboard
+                    // TODO: Add your project posting logic here
+                    console.log('Posting project directly:', formData);
+                    alert('Project posted successfully!');
+                    // Redirect back to client dashboard
+                    window.parent.location.href = 'clientDashboard.html';
+                } else {
+                    // Store form data and redirect to login
+                    localStorage.setItem('pendingProjectData', JSON.stringify(formData));
+                    window.location.href = 'login.html';
                 }
-                
-                projectPreview.innerHTML = previewHTML;
-                previewCard.style.display = 'block';
-                
-                // Scroll to preview
-                previewCard.scrollIntoView({ behavior: 'smooth' });
-                
-                // Here you would normally submit to your backend
-                // For now we're just showing the preview
             });
-            
+
             // Make removeSkill available globally for the skill tags
             window.removeSkill = removeSkill;
         });
