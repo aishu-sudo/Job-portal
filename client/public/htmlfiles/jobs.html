@@ -1455,6 +1455,15 @@
         // Initialize
         updateSavedJobsCount();
         setupEventListeners();
+
+        // Check URL parameters for tab
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        if (tabParam) {
+            currentTab = tabParam;
+            updateActiveTab();
+        }
+
         loadJobsForTab(currentTab);
 
         function setupEventListeners() {

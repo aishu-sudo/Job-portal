@@ -1335,9 +1335,13 @@
 
         // Initialize the page
         function initPage() {
+            // Add a flag to check if coming from index
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromIndex = urlParams.get('from') === 'index';
+
             renderSkillsCategories();
             renderLocations();
-            renderFreelancers();
+            renderFreelancers(fromIndex);
 
             // Set up event listeners
             sortFreelancersEl.addEventListener('change', handleSortChange);
@@ -1375,7 +1379,7 @@
                 currentFilter.skill = null;
                 currentFilter.location = null;
                 updateFilterText();
-                renderFreelancers();
+                renderFreelancers(fromIndex);
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
@@ -1456,7 +1460,7 @@
         }
 
         // Render freelancers based on current filter
-        function renderFreelancers() {
+        function renderFreelancers(fromIndex = false) {
             let filteredFreelancers = [...freelancers];
 
             if (currentFilter.skill) {
@@ -1480,7 +1484,6 @@
                     filteredFreelancers.sort((a, b) => b.rating - a.rating);
                     break;
                 case 'newest':
-                    // Assuming newer freelancers have higher IDs
                     filteredFreelancers.sort((a, b) => b.id - a.id);
                     break;
                 case 'price-high':
@@ -1506,7 +1509,7 @@
             }
 
             freelancersGridEl.innerHTML = filteredFreelancers.map(freelancer => `
-                <div class="freelancer-card">
+                <div class="freelancer-card" data-id="${freelancer.id}">
                     <div class="freelancer-img" style="background-image: url('${freelancer.image}')"></div>
                     <div class="freelancer-info">
                         <h3>${freelancer.name}</h3>
@@ -1524,7 +1527,7 @@
                             </div>
                             <div>
                                 <button class="view-profile-btn" data-id="${freelancer.id}">Profile</button>
-                                <button class="hire-btn">Hire</button>
+                                <button class="hire-btn" data-from-index="${fromIndex}">Hire</button>
                             </div>
                         </div>
                     </div>
@@ -1535,20 +1538,32 @@
             document.querySelectorAll('.view-profile-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const freelancerId = parseInt(e.target.getAttribute('data-id'));
-                    showFreelancerProfile(freelancerId);
+                    showFreelancerProfile(freelancerId, fromIndex);
                 });
             });
             
             // Add click event to hire buttons
-            document.querySelectorAll('.hire-btn').forEach((btn, index) => {
-                btn.addEventListener('click', () => {
-                    alert(`You're hiring ${filteredFreelancers[index].name} for your project!`);
+            document.querySelectorAll('.hire-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const fromIndex = this.getAttribute('data-from-index') === 'true';
+                    if (fromIndex) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    if (!this.classList.contains('hired')) {
+                        this.textContent = 'Hired';
+                        this.classList.add('hired');
+                        this.style.backgroundColor = '#28a745';
+                        this.style.cursor = 'default';
+                        this.disabled = true;
+                    }
                 });
             });
         }
         
         // Show freelancer profile in modal
-        function showFreelancerProfile(id) {
+        function showFreelancerProfile(id, fromIndex = false) {
             const freelancer = freelancers.find(f => f.id === id);
             if (!freelancer) return;
             
@@ -1565,7 +1580,7 @@
                         </p>
                         <p><strong>Hourly Rate:</strong> ${freelancer.rate}</p>
                         <div class="profile-actions">
-                            <button class="hire-btn">Hire ${freelancer.name}</button>
+                            <button class="hire-btn" data-from-index="${fromIndex}">Hire ${freelancer.name}</button>
                         </div>
                     </div>
                 </div>
@@ -1605,8 +1620,30 @@
             `;
             
             // Add click event to hire button in modal
-            profileContent.querySelector('.hire-btn').addEventListener('click', () => {
-                alert(`You're hiring ${freelancer.name} for your project!`);
+            profileContent.querySelector('.hire-btn').addEventListener('click', function() {
+                const fromIndex = this.getAttribute('data-from-index') === 'true';
+                if (fromIndex) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                if (!this.classList.contains('hired')) {
+                    this.textContent = 'Hired';
+                    this.classList.add('hired');
+                    this.style.backgroundColor = '#28a745';
+                    this.style.cursor = 'default';
+                    this.disabled = true;
+                    
+                    // Also update the hire button in the grid if it exists
+                    const gridHireBtn = document.querySelector(`.freelancer-card[data-id="${freelancer.id}"] .hire-btn`);
+                    if (gridHireBtn) {
+                        gridHireBtn.textContent = 'Hired';
+                        gridHireBtn.classList.add('hired');
+                        gridHireBtn.style.backgroundColor = '#28a745';
+                        gridHireBtn.style.cursor = 'default';
+                        gridHireBtn.disabled = true;
+                    }
+                }
             });
             
             profileModal.style.display = 'block';

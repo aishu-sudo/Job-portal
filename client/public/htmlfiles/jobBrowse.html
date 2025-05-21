@@ -1122,20 +1122,6 @@
             }
         });
 
-        // Category card click handlers
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const category = this.querySelector('.category-title').textContent;
-                jobTitleInput.value = category.split(' & ')[0]; // Set the first part of category as search term
-                filterJobs();
-
-                // Scroll to job listings
-                document.getElementById('job-listings-container').scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
         // Functions
         function filterJobs() {
             const titleSearch = jobTitleInput.value.toLowerCase();
@@ -1532,6 +1518,27 @@
         document.getElementById('back-to-jobs').addEventListener('click', function(e) {
             e.preventDefault();
             document.body.removeChild(applicationFormDiv);
+        });
+
+        // Handle category selection from URL hash
+        document.addEventListener('DOMContentLoaded', function() {
+            const hash = window.location.hash;
+            if (hash) {
+                const category = hash.substring(1); // Remove the # symbol
+                const jobTitleInput = document.getElementById('job-title-input');
+                if (jobTitleInput) {
+                    // Set the search input to the category name
+                    jobTitleInput.value = category.split('-').map(word => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ');
+                    
+                    // Trigger the search
+                    const searchForm = document.getElementById('job-search-form');
+                    if (searchForm) {
+                        searchForm.dispatchEvent(new Event('submit'));
+                    }
+                }
+            }
         });
     }
 

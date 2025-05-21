@@ -397,6 +397,99 @@
             </div>
         </div>
         <script>
+            // Load projects from localStorage when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                loadProjects();
+            });
+
+            function loadProjects() {
+                const projectsContainer = document.getElementById('projects-container');
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+
+                // Clear existing projects
+                projectsContainer.innerHTML = '';
+
+                if (projects.length === 0) {
+                    projectsContainer.innerHTML = '<p style="text-align: center; padding: 20px;">No projects posted yet.</p>';
+                    return;
+                }
+
+                // Display each project
+                projects.forEach(project => {
+                            const projectCard = document.createElement('div');
+                            projectCard.className = 'project-card';
+                            projectCard.innerHTML = `
+                        <div class="project-image">
+                            Project Image
+                        </div>
+                        <div class="project-details">
+                            <h3 class="project-title">${project.title}</h3>
+                            <p class="project-client">${project.company}</p>
+                            <div class="project-meta-top">
+                                <span class="project-type">${project.jobType}</span>
+                                <span class="project-location">${project.location}</span>
+                            </div>
+                            <p class="project-description">${project.description}</p>
+                            <div class="project-skills">
+                                ${project.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                            </div>
+                            <div class="project-meta">
+                                <span class="project-price">$${project.salaryMin} - $${project.salaryMax} per ${project.salaryPeriod}</span>
+                                <span class="project-status status-in-progress">Posted</span>
+                            </div>
+                        </div>
+                    `;
+                    projectsContainer.appendChild(projectCard);
+                });
+
+                // Reattach click event listeners to new project cards
+                attachProjectCardListeners();
+            }
+
+            function attachProjectCardListeners() {
+                document.querySelectorAll('.project-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const title = this.querySelector('.project-title').textContent;
+                        const client = this.querySelector('.project-client').textContent;
+                        const price = this.querySelector('.project-price').textContent;
+                        const status = this.querySelector('.project-status').textContent;
+                        const description = this.querySelector('.project-description').textContent;
+                        const jobType = this.querySelector('.project-type').textContent;
+                        const location = this.querySelector('.project-location').textContent;
+
+                        // Get all skills
+                        const skills = [];
+                        this.querySelectorAll('.skill-tag').forEach(tag => {
+                            skills.push(tag.textContent);
+                        });
+
+                        // Update modal content
+                        document.getElementById('modal-project-title').textContent = title;
+                        document.getElementById('modal-project-client').textContent = client;
+                        document.getElementById('modal-project-price').textContent = price;
+                        document.getElementById('modal-project-status').textContent = status;
+                        document.getElementById('modal-project-description').textContent = description;
+                        document.getElementById('modal-project-meta-top').innerHTML = `
+                            <span class="project-type">${jobType}</span>
+                            <span class="project-location">${location}</span>
+                        `;
+
+                        // Update skills
+                        const skillsContainer = document.getElementById('modal-project-skills');
+                        skillsContainer.innerHTML = '';
+                        skills.forEach(skill => {
+                            const span = document.createElement('span');
+                            span.className = 'skill-tag';
+                            span.textContent = skill;
+                            skillsContainer.appendChild(span);
+                        });
+
+                        // Show modal
+                        modal.style.display = 'flex';
+                    });
+                });
+            }
+
             // Simple filter functionality
             document.querySelectorAll('.filter-btn').forEach(button => {
                 button.addEventListener('click', function() {
@@ -416,7 +509,7 @@
 
                         if (filter === 'all' ||
                             (filter === 'completed' && status === 'completed') ||
-                            (filter === 'in-progress' && status === 'in progress')) {
+                            (filter === 'in-progress' && status === 'posted')) {
                             project.style.display = 'block';
                         } else {
                             project.style.display = 'none';
@@ -428,43 +521,6 @@
             // Modal functionality
             const modal = document.getElementById('project-modal');
             const closeBtn = document.querySelector('.close-modal');
-
-            // When any project card is clicked
-            document.querySelectorAll('.project-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const title = this.querySelector('.project-title').textContent;
-                    const client = this.querySelector('.project-client').textContent;
-                    const price = this.querySelector('.project-price').textContent;
-                    const status = this.querySelector('.project-status').textContent;
-                    const description = this.querySelector('.project-description').textContent;
-
-                    // Get all skills
-                    const skills = [];
-                    this.querySelectorAll('.skill-tag').forEach(tag => {
-                        skills.push(tag.textContent);
-                    });
-
-                    // Update modal content
-                    document.getElementById('modal-project-title').textContent = title;
-                    document.getElementById('modal-project-client').textContent = client;
-                    document.getElementById('modal-project-price').textContent = price;
-                    document.getElementById('modal-project-status').textContent = status;
-                    document.getElementById('modal-project-description').textContent = description;
-
-                    // Update skills
-                    const skillsContainer = document.getElementById('modal-project-skills');
-                    skillsContainer.innerHTML = '';
-                    skills.forEach(skill => {
-                        const span = document.createElement('span');
-                        span.className = 'skill-tag';
-                        span.textContent = skill;
-                        skillsContainer.appendChild(span);
-                    });
-
-                    // Show modal
-                    modal.style.display = 'flex';
-                });
-            });
 
             // Close modal when X is clicked
             closeBtn.addEventListener('click', function() {
