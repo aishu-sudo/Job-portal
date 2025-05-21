@@ -21,6 +21,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Export the auth instance
+export { auth };
+
 const loginForm = document.getElementById("login-form");
 const messageElement = document.getElementById("message");
 const forgotPasswordBtn = document.getElementById("forgot-password");
@@ -56,6 +59,10 @@ if (loginForm) {
 
             const userData = userSnap.data();
             const role = (userData.userType || userData.role || "").toLowerCase();
+
+            // Store user role in localStorage
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('userId', user.uid);
 
             showMessage("✅ Login successful! Redirecting...", "success");
 
@@ -100,8 +107,6 @@ if (forgotPasswordBtn) {
         }
     });
 }
-
-
 
 setTimeout(() => {
     onAuthStateChanged(auth, (user) => {

@@ -209,7 +209,6 @@
 
         <button onclick="loadSection('messages')" id="messagesBtn"><i class="fas fa-comments"></i> Messages</button>
         <button onclick="loadSection('filterBySkill')" id="filterBySkillBtn"><i class="fas fa-cogs"></i> JobsCategory</button>
-        <button onclick="loadSection('payments')" id="paymentsBtn"><i class="fas fa-wallet"></i> Payments</button>
 
         <button onclick="loadSection('profile')" id="profileBtn"><i class="fas fa-user"></i> My Profile</button>
         <button onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -275,10 +274,9 @@
     </div>
 
     <script>
-        // Set dashboard as active by default and load notifications
+        // Set dashboard as active by default
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('dashboardBtn').classList.add('active');
-            loadNotifications(); // Load notifications when page loads
         });
 
         function loadSection(section) {
@@ -314,9 +312,6 @@
                 case 'filterBySkill':
                     frame.src = 'jobs.html?filter=skill';
                     break;
-                case 'payments':
-                    frame.src = 'freelancerpayment.html';
-                    break;
                 case 'profile':
                     frame.src = 'freelancerprofile.html';
                     break;
@@ -329,9 +324,6 @@
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
             dropdown.classList.toggle('show');
-            if (dropdown.classList.contains('show')) {
-                loadNotifications(); // Reload notifications when dropdown is opened
-            }
         }
 
         function markAllAsRead() {
@@ -361,144 +353,327 @@
         }
 
         function loadNotifications() {
-            const notifications = JSON.parse(localStorage.getItem('freelancerNotifications')) || [];
-            const notificationContainer = document.querySelector('.notification-dropdown');
-            const notificationItems = notificationContainer.querySelectorAll('.notification-item');
+            try {
+                const notifications = JSON.parse(localStorage.getItem('freelancerNotifications')) || [];
+                const notificationContainer = document.querySelector('.notification-dropdown');
+                const notificationItems = notificationContainer.querySelectorAll('.notification-item');
 
-            // Remove existing notification items except the header
-            notificationItems.forEach(item => {
-                if (!item.classList.contains('notification-header')) {
-                    item.remove();
-                }
-            });
-
-            // Add new notifications
-            notifications.forEach(notification => {
-                const notificationItem = document.createElement('div');
-                notificationItem.className = `notification-item ${notification.read ? '' : 'unread'}`;
-                notificationItem.innerHTML = `
-                    <div class="notification-title">${notification.title}</div>
-                    <div class="notification-message">${notification.message}</div>
-                    <div class="notification-time">${formatTimeAgo(new Date(notification.time))}</div>
-                `;
-
-                // Add click handler to view project details and apply
-                notificationItem.addEventListener('click', () => {
-                    if (notification.type === 'new_project') {
-                        viewProjectDetails(notification);
-                        markNotificationAsRead(notification.id);
+                // Remove existing notification items except the header
+                notificationItems.forEach(item => {
+                    if (!item.classList.contains('notification-header')) {
+                        item.remove();
                     }
                 });
 
-                // Insert after the header
-                notificationContainer.insertBefore(notificationItem, notificationContainer.children[1]);
-            });
+                // Add new notifications
+                notifications.forEach(notification => {
+                    const notificationItem = document.createElement('div');
+                    notificationItem.className = `notification-item ${notification.read ? '' : 'unread'}`;
 
-            // Update notification badge
-            const unreadCount = notifications.filter(n => !n.read).length;
-            const badge = document.querySelector('.notification-badge');
-            badge.textContent = unreadCount;
-            badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+                    // Add priority indicator if it's a high priority notification
+                    const priorityIndicator = notification.priority === 'high' ?
+                        '<span style="color: #ff5722; margin-right: 5px;">●</span>' : '';
+
+                    notificationItem.innerHTML = `
+                        <div class="notification-title">${priorityIndicator}${notification.title}</div>
+                        <div class="notification-message">${notification.message}</div>
+                        <div class="notification-time">${formatTimeAgo(new Date(notification.time))}</div>
+                    `;
+
+                    // Add click handler to view notification details
+                    notificationItem.addEventListener('click', () => {
+                        handleNotificationClick(notification);
+                        markNotificationAsRead(notification.id);
+                    });
+
+                    // Insert after the header
+                    notificationContainer.insertBefore(notificationItem, notificationContainer.children[1]);
+                });
+
+                // Update notification badge
+                const unreadCount = notifications.filter(n => !n.read).length;
+                const badge = document.querySelector('.notification-badge');
+                badge.textContent = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+
+                // Store the updated count
+                localStorage.setItem('freelancerNotificationCount', unreadCount);
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
         }
 
-        function viewProjectDetails(notification) {
-            if (notification.type === 'new_project') {
-                // Create modal for project details
-                const modal = document.createElement('div');
-                modal.className = 'modal';
-                modal.style.display = 'block';
-                modal.innerHTML = `
-                    <div class="modal-content" style="max-width: 800px; background: white; padding: 20px; border-radius: 8px;">
-                        <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
-                        <h2>${notification.projectData.title}</h2>
-                        <p><strong>Company:</strong> ${notification.projectData.company}</p>
-                        <p><strong>Job Type:</strong> ${notification.projectData.jobType}</p>
-                        <p><strong>Location:</strong> ${notification.projectData.location}</p>
-                        <p><strong>Salary Range:</strong> ${notification.projectData.salaryMin} - ${notification.projectData.salaryMax} per ${notification.projectData.salaryPeriod}</p>
+        // Add auto-refresh for notifications
+        setInterval(loadNotifications, 30000); // Refresh every 30 seconds
+
+        // Load notifications when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNotifications();
+            // ... existing DOMContentLoaded code ...
+        });
+
+        function handleNotificationClick(notification) {
+            switch (notification.type) {
+                case 'new_project':
+                    showProjectDetailsModal(notification);
+                    break;
+                case 'application_viewed':
+                    showApplicationStatusModal(notification);
+                    break;
+                case 'payment_received':
+                    showPaymentModal(notification);
+                    break;
+                case 'new_message':
+                    showMessageModal(notification);
+                    break;
+                default:
+                    console.log('Unknown notification type:', notification.type);
+            }
+        }
+
+        function showProjectDetailsModal(notification) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+
+            const projectData = notification.projectData;
+            modal.innerHTML = `
+                <div class="modal-content" style="background: white; padding: 20px; border-radius: 8px; max-width: 800px; width: 90%;">
+                    <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
+                    <h2>${projectData.title}</h2>
+                    <div style="margin-top: 20px;">
+                        <p><strong>Company:</strong> ${projectData.company}</p>
+                        <p><strong>Job Type:</strong> ${projectData.jobType}</p>
+                        <p><strong>Location:</strong> ${projectData.location}</p>
+                        <p><strong>Salary Range:</strong> $${projectData.salaryMin} - $${projectData.salaryMax} per ${projectData.salaryPeriod}</p>
                         <div style="margin-top: 15px;">
                             <strong>Description:</strong>
-                            <p style="margin-top: 5px; white-space: pre-wrap;">${notification.projectData.description}</p>
+                            <p style="margin-top: 5px; white-space: pre-wrap;">${projectData.description}</p>
                         </div>
                         <div style="margin-top: 15px;">
                             <strong>Required Skills:</strong>
                             <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
-                                ${notification.projectData.skills.map(skill => 
+                                ${projectData.skills.map(skill => 
                                     `<span style="background: #e0f2fe; padding: 5px 10px; border-radius: 15px;">${skill}</span>`
                                 ).join('')}
                             </div>
                         </div>
-                        <div style="margin-top: 20px; text-align: right;">
-                            <button onclick="applyForJob('${notification.projectData.projectId}')" 
-                                    style="background: #1976d2; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
-                                Apply Now
-                            </button>
-                        </div>
                     </div>
-                `;
-
-                document.body.appendChild(modal);
-
-                // Close modal when clicking the X or outside the modal
-                modal.querySelector('.close').onclick = function() {
-                    document.body.removeChild(modal);
-                };
-                modal.onclick = function(e) {
-                    if (e.target === modal) {
-                        document.body.removeChild(modal);
-                    }
-                };
-            } else if (notification.type === 'payment_received') {
-                // Create modal for payment details
-                const modal = document.createElement('div');
-                modal.className = 'modal';
-                modal.style.display = 'block';
-                modal.innerHTML = `
-                    <div class="modal-content" style="max-width: 600px; background: white; padding: 20px; border-radius: 8px;">
-                        <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
-                        <h2>Payment Received</h2>
-                        <div style="margin-top: 20px;">
-                            <p><strong>Amount:</strong> $${notification.paymentData.amount}</p>
-                            <p><strong>From:</strong> ${notification.paymentData.clientName}</p>
-                            <p><strong>Payment ID:</strong> ${notification.paymentData.paymentId}</p>
-                            <p><strong>Time:</strong> ${formatTimeAgo(new Date(notification.time))}</p>
-                        </div>
-                        <div style="margin-top: 20px; text-align: right;">
-                            <button onclick="acceptPayment('${notification.paymentData.paymentId}', ${notification.paymentData.amount})" 
-                                    style="background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
-                                Accept Payment
-                            </button>
-                        </div>
+                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button onclick="viewFullProjectDetails('${projectData.projectId}')" 
+                                style="background: #f0f0f0; color: #333; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                            View Full Details
+                        </button>
+                        <button onclick="applyForProject('${projectData.projectId}')" 
+                                style="background: #1976d2; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                            Apply Now
+                        </button>
                     </div>
-                `;
+                </div>
+            `;
 
-                document.body.appendChild(modal);
+            document.body.appendChild(modal);
+            modal.querySelector('.close').onclick = () => document.body.removeChild(modal);
+            modal.onclick = (e) => {
+                if (e.target === modal) document.body.removeChild(modal);
+            };
+        }
 
-                // Close modal when clicking the X or outside the modal
-                modal.querySelector('.close').onclick = function() {
+        function applyForProject(projectId) {
+            try {
+                // Store the project ID in localStorage
+                localStorage.setItem('selectedProjectId', projectId);
+                
+                // Get the project details
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                const project = projects.find(p => p.projectId === projectId);
+                
+                if (!project) {
+                    throw new Error('Project not found');
+                }
+
+                // Close the modal
+                const modal = document.querySelector('.modal');
+                if (modal) {
                     document.body.removeChild(modal);
-                };
-                modal.onclick = function(e) {
-                    if (e.target === modal) {
-                        document.body.removeChild(modal);
-                    }
-                };
+                }
+
+                // Redirect to application form
+                window.location.href = 'applicationform.html';
+            } catch (error) {
+                console.error('Error applying for project:', error);
+                alert('Error applying for project. Please try again.');
             }
         }
 
-        function applyForJob(projectId) {
-            // Store the project ID in localStorage
+        function viewFullProjectDetails(projectId) {
+            // Store the project ID and redirect to the full project details page
             localStorage.setItem('selectedProjectId', projectId);
-            // Redirect to job application page
-            window.location.href = 'applicationform.html';
+            window.location.href = 'jobBrowse.html';
         }
 
-        function acceptPayment(paymentId, amount) {
-            // Redirect to payment page with pre-filled amount
-            localStorage.setItem('pendingPayment', JSON.stringify({
-                paymentId: paymentId,
-                amount: amount
-            }));
-            window.location.href = 'freelancerpayment.html';
+        function showApplicationStatusModal(notification) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%;">
+                    <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
+                    <h2>Application Status</h2>
+                    <div style="margin-top: 20px;">
+                        <p><strong>Project:</strong> ${notification.projectTitle}</p>
+                        <p><strong>Status:</strong> ${notification.status}</p>
+                        <p><strong>Viewed At:</strong> ${new Date(notification.viewedAt).toLocaleString()}</p>
+                        ${notification.clientFeedback ? `
+                            <div style="margin-top: 15px;">
+                                <strong>Client Feedback:</strong>
+                                <p style="margin-top: 5px; white-space: pre-wrap;">${notification.clientFeedback}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div style="margin-top: 20px; text-align: right;">
+                        <button onclick="viewApplicationDetails('${notification.applicationId}')" 
+                                style="background: #1976d2; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.querySelector('.close').onclick = () => document.body.removeChild(modal);
+            modal.onclick = (e) => {
+                if (e.target === modal) document.body.removeChild(modal);
+            };
+        }
+
+        function showPaymentModal(notification) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%;">
+                    <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
+                    <h2>Payment Details</h2>
+                    <div style="margin-top: 20px;">
+                        <p><strong>Amount:</strong> $${notification.paymentData.amount}</p>
+                        <p><strong>Project:</strong> ${notification.projectTitle}</p>
+                        <p><strong>Payment ID:</strong> ${notification.paymentData.paymentId}</p>
+                        <p><strong>Status:</strong> ${notification.paymentData.status}</p>
+                        <p><strong>Client:</strong> ${notification.paymentData.clientName}</p>
+                    </div>
+                    <div style="margin-top: 20px; text-align: right;">
+                        <button onclick="acceptPayment('${notification.paymentData.paymentId}')" 
+                                style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                            Accept Payment
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.querySelector('.close').onclick = () => document.body.removeChild(modal);
+            modal.onclick = (e) => {
+                if (e.target === modal) document.body.removeChild(modal);
+            };
+        }
+
+        function showMessageModal(notification) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%;">
+                    <span class="close" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
+                    <h2>New Message</h2>
+                    <div style="margin-top: 20px;">
+                        <p><strong>From:</strong> ${notification.senderName}</p>
+                        <p><strong>Subject:</strong> ${notification.messageSubject}</p>
+                        <div style="margin-top: 15px;">
+                            <strong>Message:</strong>
+                            <p style="margin-top: 5px; white-space: pre-wrap;">${notification.messageContent}</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; text-align: right;">
+                        <button onclick="replyToMessage('${notification.senderId}')" 
+                                style="background: #1976d2; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                            Reply
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.querySelector('.close').onclick = () => document.body.removeChild(modal);
+            modal.onclick = (e) => {
+                if (e.target === modal) document.body.removeChild(modal);
+            };
+        }
+
+        // Action handlers for notifications
+        function viewApplicationDetails(applicationId) {
+            // Implement application details view logic
+            console.log('Viewing application details for:', applicationId);
+            // Add your implementation here
+        }
+
+        function acceptPayment(paymentId) {
+            // Implement payment acceptance logic
+            console.log('Accepting payment:', paymentId);
+            // Add your implementation here
+        }
+
+        function replyToMessage(senderId) {
+            // Implement message reply logic
+            console.log('Replying to message from:', senderId);
+            // Add your implementation here
         }
 
         function markNotificationAsRead(notificationId) {

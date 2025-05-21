@@ -55,19 +55,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const description = descriptionInput.value.trim();
         if (!description) return alert('Description is required.');
 
+        // Check if coming from index page
+        const referrer = document.referrer;
+        const isFromIndex = referrer.includes('index.html') || referrer.endsWith('/');
+
         try {
             const authCheck = await fetch(`${API_BASE_URL}/api/auth/check`, {
                 credentials: 'include'
             });
 
             if (!authCheck.ok) {
-                // Not logged in → redirect to signup with draft
-                const draftEncoded = encodeURIComponent(description);
-                window.location.href = `signup.html?returnTo=form.html&draft=${draftEncoded}`;
+                if (isFromIndex) {
+                    // Store the project data and redirect to login if from index
+                    localStorage.setItem('pendingProjectData', description);
+                    window.location.href = 'login.html';
+                } else {
+                    // For client dashboard, just show error
+                    alert('Please log in to post a project');
+                }
                 return;
             }
 
-            // Already logged in → post directly
+            // If logged in, post the project
             postProject(description);
 
         } catch (err) {

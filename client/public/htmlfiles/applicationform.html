@@ -456,28 +456,70 @@
                 return;
             }
 
-            // In a real application, you would send this data to your server
-            const formData = {
-                jobId: 'backend-engineer-datasystems', // This would come from the job listing
-                fullName: fullName,
-                email: email,
-                phone: document.getElementById('phone').value.trim(),
-                resume: document.getElementById('resume').files[0].name,
-                portfolio: document.getElementById('portfolio').value.trim(),
-                coverLetter: document.getElementById('coverLetter').value.trim()
-            };
+            try {
+                // Get the selected project ID
+                const projectId = localStorage.getItem('selectedProjectId');
+                if (!projectId) {
+                    throw new Error('No project selected');
+                }
 
-            console.log('Application submitted:', formData);
+                // Get project details
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                const project = projects.find(p => p.projectId === projectId);
+                if (!project) {
+                    throw new Error('Project not found');
+                }
 
-            // Show success message
-            alert('Your application has been submitted successfully!');
+                // Create application data
+                const applicationData = {
+                    projectId: projectId,
+                    projectTitle: project.title,
+                    appliedAt: new Date().toISOString(),
+                    status: 'pending',
+                    freelancerId: localStorage.getItem('userId'),
+                    freelancerName: fullName,
+                    email: email,
+                    phone: document.getElementById('phone').value.trim(),
+                    resume: document.getElementById('resume').files[0].name,
+                    portfolio: document.getElementById('portfolio').value.trim(),
+                    coverLetter: document.getElementById('coverLetter').value.trim()
+                };
 
-            // Reset form
-            this.reset();
-            document.getElementById('resumeFileName').textContent = 'No file selected';
+                // Store the application
+                const applications = JSON.parse(localStorage.getItem('projectApplications')) || [];
+                applications.push(applicationData);
+                localStorage.setItem('projectApplications', JSON.stringify(applications));
 
-            // In a real app, you might redirect to a confirmation page
-            // or update the UI to show application status
+                // Create notification for client
+                const clientNotifications = JSON.parse(localStorage.getItem('clientNotifications')) || [];
+                const newNotification = {
+                    id: Date.now().toString(),
+                    type: 'new_application',
+                    title: 'New Application Received',
+                    message: `${fullName} has applied to your project "${project.title}"`,
+                    time: new Date().toISOString(),
+                    read: false,
+                    applicationData: applicationData
+                };
+                clientNotifications.unshift(newNotification);
+                localStorage.setItem('clientNotifications', JSON.stringify(clientNotifications));
+
+                // Clear the selected project ID
+                localStorage.removeItem('selectedProjectId');
+
+                // Show success message
+                alert('Your application has been submitted successfully!');
+
+                // Reset form
+                this.reset();
+                document.getElementById('resumeFileName').textContent = 'No file selected';
+
+                // Redirect back to freelancer dashboard
+                window.location.href = 'freelancerDashboard.html';
+            } catch (error) {
+                console.error('Error submitting application:', error);
+                alert('Error submitting application. Please try again.');
+            }
         });
 
         // Back link functionality
